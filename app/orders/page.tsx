@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Order = {
   order_code: string;
@@ -17,8 +17,22 @@ type Order = {
 };
 
 type SearchMode = "orderCode" | "gameId";
+
+type SearchHistory = {
+  id: string;
+  mode: SearchMode;
+  orderCode?: string;
+  userId?: string;
+  zoneId?: string;
+  searchedAt: string;
+  resultCount: number;
+};
+
 type RecoveryMethod = "email" | "whatsapp";
 type RecoveryStep = "method" | "contact" | "otp" | "result";
+
+const HISTORY_KEY = "topupku_search_history";
+const MAX_HISTORY = 30;
 
 export default function OrdersPage() {
   const [mode, setMode] = useState<SearchMode>("orderCode");
@@ -31,7 +45,9 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // State popup lupa nomor pesanan
+  const [history, setHistory] = useState<SearchHistory[]>([]);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
+
   const [showRecovery, setShowRecovery] = useState(false);
   const [recoveryMethod, setRecoveryMethod] =
     useState<RecoveryMethod>("email");
@@ -42,17 +58,81 @@ export default function OrdersPage() {
   const [otp, setOtp] = useState("");
   const [recoveryMessage, setRecoveryMessage] = useState("");
 
-  async function handleSearch() {
-    if (mode === "orderCode" && !orderCode.trim()) {
-      setError("Masukkan nomor pesanan terlebih dahulu.");
-      return;
-    }
+  // Membaca riwayat dari Local Storage saat halaman dibuka.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(HISTORY_KEY);
 
-    if (mode === "gameId" && (!userId.trim() || !zoneId.trim())) {
-      setError("Masukkan User ID dan Zone ID terlebih dahulu.");
-      return;
-    }
+      if (saved) {
+        const parsed = JSON.parse(saved);
 
+        if (Array.isArray(parsed)) {
+          setHistory(parsed);
+        }
+      }
+    } catch {
+      console.error("Gagal membaca riwayat pencarian.");
+    } finally {
+      setHistoryLoaded(true);
+    }
+  }, []);
+
+  // Menyimpan riwayat ke Local Storage.
+  function saveHistory(newHistory: SearchHistory[]) {
+    setHistory(newHistory);
+
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(newHistory));
+    } catch {
+      setError("Riwayat tidak dapat disimpan di browser.");
+    }
+  }
+
+  function addSearchHistory(entry: Omit<SearchHistory, "id" | "searchedAt">) {
+    const newEntry: SearchHistory = {
+      ...entry,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      searchedAt: new Date().toISOString(),
+    };
+
+    const updated = [
+      newEntry,
+      ...history.filter((item) => {
+        if (item.mode !== newEntry.mode) return true;
+
+        if (item.mode === "orderCode") {
+          return item.orderCode !== newEntry.orderCode;
+        }
+
+        return (
+          item.userId !== newEntry.userId ||
+          item.zoneId !== newEntry.zoneId
+        );
+      }),
+    ].slice(0, MAX_HISTORY);
+
+    saveHistory(updated);
+  }
+
+  function deleteHistory(id: string) {
+    const updated = history.filter((item) => item.id !== id);
+    saveHistory(updated);
+  }
+
+  function clearHistory() {
+    if (!window.confirm("Hapus seluruh riwayat pencarian?")) return;
+    saveHistory([]);
+  }
+
+  // Fungsi utama pencarian pesanan.
+  async function searchOrders(
+    searchMode: SearchMode,
+    values: {
+      orderCode?: string;
+      userId?: string;
+      zoneId?: string;
+    }
+  ) {
     setLoading(true);
     setError("");
     setOrders([]);
@@ -60,11 +140,11 @@ export default function OrdersPage() {
     try {
       const params = new URLSearchParams();
 
-      if (mode === "orderCode") {
-        params.set("orderCode", orderCode.trim());
+      if (searchMode === "orderCode") {
+        params.set("orderCode", values.orderCode || "");
       } else {
-        params.set("userId", userId.trim());
-        params.set("zoneId", zoneId.trim());
+        params.set("userId", values.userId || "");
+        params.set("zoneId", values.zoneId || "");
       }
 
       const response = await fetch(`/api/orders?${params.toString()}`);
@@ -74,7 +154,20 @@ export default function OrdersPage() {
         throw new Error(result.message || "Pesanan tidak ditemukan.");
       }
 
-      setOrders(result.orders || []);
+      const foundOrders: Order[] = result.orders || [];
+      setOrders(foundOrders);
+
+      addSearchHistory({
+        mode: searchMode,
+        orderCode: values.orderCode,
+        userId: values.userId,
+        zoneId: values.zoneId,
+        resultCount: foundOrders.length,
+      });
+
+      if (foundOrders.length === 0) {
+        setError("Pesanan tidak ditemukan.");
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Terjadi kesalahan."
@@ -82,6 +175,58 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function handleSearch() {
+    if (mode === "orderCode") {
+      const value = orderCode.trim();
+
+      if (!value) {
+        setError("Masukkan nomor pesanan terlebih dahulu.");
+        return;
+      }
+
+      await searchOrders("orderCode", { orderCode: value });
+      return;
+    }
+
+    const id = userId.trim();
+    const zone = zoneId.trim();
+
+    if (!id || !zone) {
+      setError("Masukkan User ID dan Zone ID terlebih dahulu.");
+      return;
+    }
+
+    await searchOrders("gameId", {
+      userId: id,
+      zoneId: zone,
+    });
+  }
+
+  // Mengulang pencarian dari riwayat.
+  async function searchAgain(item: SearchHistory) {
+    setMode(item.mode);
+    setError("");
+    setOrders([]);
+
+    if (item.mode === "orderCode") {
+      setOrderCode(item.orderCode || "");
+
+      await searchOrders("orderCode", {
+        orderCode: item.orderCode,
+      });
+    } else {
+      setUserId(item.userId || "");
+      setZoneId(item.zoneId || "");
+
+      await searchOrders("gameId", {
+        userId: item.userId,
+        zoneId: item.zoneId,
+      });
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function openRecovery() {
@@ -154,9 +299,17 @@ export default function OrdersPage() {
     return new Date(date).toLocaleString("id-ID");
   }
 
+  function formatHistoryDate(date: string) {
+    return new Date(date).toLocaleString("id-ID", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  }
+
   return (
     <main className="min-h-screen bg-slate-950 px-5 py-12 text-white">
       <div className="mx-auto max-w-2xl">
+
         <h1 className="mb-2 text-3xl font-bold text-cyan-400">
           Riwayat Pesanan
         </h1>
@@ -165,6 +318,7 @@ export default function OrdersPage() {
           Cari transaksi TopUpKu berdasarkan nomor pesanan atau Game ID.
         </p>
 
+        {/* FORM PENCARIAN */}
         <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
           <div className="mb-6 grid grid-cols-2 gap-3">
             <button
@@ -280,6 +434,7 @@ export default function OrdersPage() {
           </button>
         </div>
 
+        {/* HASIL PENCARIAN */}
         {orders.length > 0 && (
           <div className="mt-8">
             <h2 className="mb-4 text-xl font-bold text-cyan-400">
@@ -355,6 +510,103 @@ export default function OrdersPage() {
           </div>
         )}
 
+        {/* RIWAYAT PENCARIAN */}
+        <section className="mt-10">
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-bold text-cyan-400">
+                Riwayat Pencarian
+              </h2>
+              <p className="mt-1 text-sm text-slate-400">
+                Pencarian yang pernah kamu lakukan di browser ini.
+              </p>
+            </div>
+
+            {history.length > 0 && (
+              <button
+                type="button"
+                onClick={clearHistory}
+                className="text-sm font-semibold text-red-400 hover:text-red-300"
+              >
+                Hapus Semua
+              </button>
+            )}
+          </div>
+
+          {!historyLoaded ? (
+            <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 text-center text-sm text-slate-400">
+              Memuat riwayat...
+            </div>
+          ) : history.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/50 p-8 text-center">
+              <h3 className="font-semibold text-slate-300">
+                Belum Ada Riwayat Pencarian
+              </h3>
+              <p className="mt-2 text-sm text-slate-500">
+                Pencarian pesanan yang berhasil dilakukan akan muncul di sini.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {history.map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-slate-800 bg-slate-900 p-4"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-cyan-400">
+                        {item.mode === "orderCode"
+                          ? "Nomor Pesanan"
+                          : "Game ID"}
+                      </span>
+
+                      <p className="mt-2 break-all font-semibold text-white">
+                        {item.mode === "orderCode"
+                          ? item.orderCode
+                          : `${item.userId} / ${item.zoneId}`}
+                      </p>
+
+                      <p className="mt-2 text-xs text-slate-500">
+                        {formatHistoryDate(item.searchedAt)}
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-400">
+                        {item.resultCount} pesanan ditemukan
+                      </p>
+                    </div>
+
+                    <div className="flex shrink-0 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => searchAgain(item)}
+                        disabled={loading}
+                        className="rounded-lg bg-cyan-500 px-3 py-2 text-xs font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-50"
+                      >
+                        Cari Lagi
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => deleteHistory(item.id)}
+                        aria-label="Hapus riwayat"
+                        className="rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold text-red-400 hover:bg-red-500/10"
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className="mt-4 text-xs leading-relaxed text-slate-500">
+            Riwayat ini tersimpan di browser dan perangkat yang kamu gunakan.
+            Menghapus data browser dapat menghilangkan riwayat ini.
+          </p>
+        </section>
+
         <a
           href="/"
           className="mt-8 block text-center text-sm text-slate-400 hover:text-white"
@@ -393,8 +645,8 @@ export default function OrdersPage() {
                 </h2>
 
                 <p className="mb-6 text-sm leading-relaxed text-slate-400">
-                  Jangan khawatir! Pilih metode yang ingin digunakan
-                  untuk memulihkan nomor pesanan kamu.
+                  Pilih metode yang ingin digunakan untuk memulihkan
+                  nomor pesanan kamu.
                 </p>
 
                 <div className="space-y-3">
@@ -460,7 +712,8 @@ export default function OrdersPage() {
                 </h2>
 
                 <p className="mb-6 text-sm text-slate-400">
-                  Masukkan {recoveryMethod === "email" ? "email" : "nomor WhatsApp"}{" "}
+                  Masukkan{" "}
+                  {recoveryMethod === "email" ? "email" : "nomor WhatsApp"}{" "}
                   yang kamu gunakan saat melakukan pemesanan.
                 </p>
 
