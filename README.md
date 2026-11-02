@@ -20,6 +20,20 @@ TopUpKu is designed to provide a simple and user-friendly experience for browsin
 ### Order History
 ![Order History](docs/screenshots/order-history.png)
 
+
+### Search History
+
+![Search History](docs/screenshots/search-history.png)
+
+Users can review their previous searches, repeat a search, and manage their local search history.
+
+### Forgot Order Number
+
+![Forgot Order Number](docs/screenshots/forgot-order-number.png)
+
+A prototype order-number recovery flow with Email and WhatsApp options. OTP delivery and verification are simulated and are not connected to real messaging services.
+
+
 ## Features
 
 - Game selection and product catalog
