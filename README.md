@@ -202,6 +202,7 @@ The current public order lookup endpoints are intended for prototype testing onl
 
 ## Roadmap
 
+### Completed
 - [x] Homepage and game catalog
 - [x] Game selection interface
 - [x] Checkout page
@@ -211,21 +212,32 @@ The current public order lookup endpoints are intended for prototype testing onl
 - [x] Search history
 - [x] Order recovery interface (prototype)
 - [x] GitHub repository
+
+### Next Development
+
+**Code Quality & Security**
 - [ ] Code refactoring and improved project structure
-- [ ] Improved order code generation and API security
+- [ ] Improved order code generation
+- [ ] API security and data protection improvements
 - [ ] Customer authentication
-- [ ] Payment gateway integration
-- [ ] Real payment verification and webhooks
-- [ ] OTP-based order verification
-- [ ] Game top-up provider integration
+- [ ] Secure order lookup and verification
+
+**Product Catalog Expansion**
+- [ ] Expand the catalog beyond game diamonds and currencies
+- [ ] Add game memberships and subscription products
+- [ ] Add digital game vouchers and gift cards
+- [ ] Support more games and digital products
+
+**Payment & Order Management**
+- [ ] Integrate a real payment gateway
+- [ ] Implement real payment verification and webhooks
+- [ ] Implement OTP-based order verification
+- [ ] Implement real-time order status updates
+
+**Integration & Deployment**
+- [ ] Integrate official game top-up providers
+- [ ] Integrate digital product providers
 - [ ] Production deployment
-- [ ] Expand the product catalog beyond game diamonds and currencies.
-- [ ] Add game memberships and subscription products.
-- [ ] Add digital game vouchers and gift cards.
-- [ ] Implement secure order lookup and customer authentication.
-- [ ] Integrate a real payment gateway.
-- [ ] Integrate official game top-up and digital product providers.
-- [ ] Implement real-time order status updates.
 
 
 ## Disclaimer
