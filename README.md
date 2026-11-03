@@ -30,22 +30,30 @@ Users can review their previous searches, repeat a search, and manage their loca
 
 A prototype order-number recovery flow with Email and WhatsApp options. OTP delivery and verification are simulated and are not connected to real messaging services.
 
-## Features
+### Features
 
-- Game selection and product catalog.
-- Game ID and Zone ID input.
-- Customer information input.
-- Checkout interface.
-- Multiple simulated payment method options.
-- Order creation through backend API.
-- Order data storage using Supabase.
-- Order history lookup by order code.
-- Order lookup using Game User ID and Zone ID.
-- Local search history using browser Local Storage.
-- Repeat previous searches.
-- Manage and clear search history.
-- Prototype order-number recovery interface.
-- Responsive website interface.
+- Game selection and product catalog
+- Game account details input (User ID and Zone ID)
+- Product selection and checkout flow
+- Simulated payment method selection:
+  - QRIS
+  - E-Wallet
+  - Virtual Account
+  - Bank Transfer
+- Order creation and order history management
+- Order lookup by order number or game account details
+- Search history management
+- Forgot order number interface
+
+### Planned Product Expansion
+
+TopUpKu is designed as a prototype that can be extended to support various digital products, including:
+
+- **Game Currency:** Diamonds, UC, Genesis Crystals, Valorant Points, and other in-game currencies.
+- **Game Membership:** Weekly Pass, Monthly Card, and other game subscriptions.
+- **Game Vouchers:** Digital game vouchers and prepaid codes.
+- **Digital Gift Cards:** Steam Wallet, Google Play, PlayStation Store, and other digital gift cards.
+- **Gaming Subscriptions:** PlayStation Plus, Xbox Game Pass, and other gaming subscriptions.
 
 ## Tech Stack
 
@@ -211,6 +219,14 @@ The current public order lookup endpoints are intended for prototype testing onl
 - [ ] OTP-based order verification
 - [ ] Game top-up provider integration
 - [ ] Production deployment
+- [ ] Expand the product catalog beyond game diamonds and currencies.
+- [ ] Add game memberships and subscription products.
+- [ ] Add digital game vouchers and gift cards.
+- [ ] Implement secure order lookup and customer authentication.
+- [ ] Integrate a real payment gateway.
+- [ ] Integrate official game top-up and digital product providers.
+- [ ] Implement real-time order status updates.
+
 
 ## Disclaimer
 
