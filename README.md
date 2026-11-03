@@ -213,7 +213,7 @@ The current public order lookup endpoints are intended for prototype testing onl
 - [x] Order recovery interface (prototype)
 - [x] GitHub repository
 
-### Next Development
+### Future Development Plans
 
 **Code Quality & Security**
 - [ ] Code refactoring and improved project structure
