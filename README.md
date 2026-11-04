@@ -4,7 +4,7 @@ A game top-up website prototype built with **Next.js, TypeScript, and Supabase**
 
 TopUpKu is designed to provide a simple and user-friendly experience for browsing game products, placing top-up orders, and tracking order history.
 
-> **Project Status:** Prototype — Payment gateway and game top-up provider integrations are not yet implemented.
+> **Project Status:** Functional prototype — Order management and email-based order recovery are integrated with Supabase and Resend. Payment gateway and official game top-up provider integrations are not yet implemented.
 
 ## Screenshots
 
@@ -28,7 +28,7 @@ Users can review their previous searches, repeat a search, and manage their loca
 ### Forgot Order Number
 ![Forgot Order Number](docs/screenshots/forgot-order-number.png)
 
-An order number recovery feature that allows users to recover their previous order numbers using email verification.
+An order number recovery feature that allows users to recover previous order numbers using email verification.
 
 WhatsApp recovery is displayed as a future feature and is currently unavailable.
 
@@ -37,7 +37,7 @@ WhatsApp recovery is displayed as a future feature and is currently unavailable.
 
 Users can request an order recovery verification code using their registered email address.
 
-The system checks the email against existing order records before processing the recovery request.
+The backend checks whether the email is associated with existing order records before processing the recovery request.
 
 ### OTP Verification
 ![OTP Verification](docs/screenshots/otp-verification.png)
@@ -46,8 +46,9 @@ An email-based OTP verification process integrated with the Resend email service
 
 - Six-digit verification code.
 - OTP expiration after 5 minutes.
-- Verification handled through a backend API.
-- OTP values are securely hashed before being stored in Supabase.
+- Email-based verification through backend API routes.
+- OTP values are hashed before being stored in Supabase.
+- Verification attempts are limited to help prevent repeated guessing.
 
 ### Recovery Result
 ![Recovery Result](docs/screenshots/recovered-order-number.png)
@@ -60,7 +61,8 @@ Users can copy their recovered order numbers directly from the result interface.
 
 The order recovery process uses Resend to deliver verification emails.
 
-The email notification contains:
+The email notification includes:
+
 - TopUpKu branding.
 - A six-digit OTP verification code.
 - Verification expiration information.
@@ -71,6 +73,7 @@ The email notification contains:
 The order recovery feature is connected to:
 
 - **Supabase:** Stores order records and OTP verification data.
+- **PostgreSQL:** Stores order and recovery records.
 - **Resend:** Handles email delivery.
 - **Next.js API Routes:** Processes OTP requests, verification, and order number retrieval.
 
@@ -79,22 +82,26 @@ The order recovery feature is connected to:
 - Email-based OTP recovery is implemented and integrated with the backend.
 - Email delivery to arbitrary customer addresses requires a verified sending domain in Resend.
 - WhatsApp recovery is not yet available.
-- Recovered order numbers are displayed only after successful OTP verification.
+- Order numbers are displayed only after successful OTP verification.
+- Recovery requests use generic responses to avoid revealing whether an email address is registered.
 
 ## Features
 
-- Game selection and product catalog
-- Game account details input (User ID and Zone ID)
-- Product selection and checkout flow
+- Game selection and product catalog.
+- Game account details input (User ID and Zone ID).
+- Product selection and checkout flow.
 - Simulated payment method selection:
   - QRIS
   - E-Wallet
   - Virtual Account
   - Bank Transfer
-- Order creation and order history management
-- Order lookup by order number or game account details
-- Search history management
-- Forgot order number interface
+- Order creation and order history management.
+- Order lookup by order number or game account details.
+- Search history management.
+- Forgot order number interface.
+- Email-based OTP order recovery.
+- OTP verification and expiration handling.
+- Recovered order number display and copy functionality.
 
 ### Planned Product Expansion
 
@@ -110,12 +117,13 @@ TopUpKu is designed as a prototype that can be extended to support various digit
 
 | Technology | Purpose |
 |---|---|
-| Next.js 16 | React framework |
+| Next.js 16 | React framework and API routes |
 | React | User interface |
 | TypeScript | Type-safe development |
 | Tailwind CSS | Styling |
 | Supabase | Backend and database integration |
 | PostgreSQL | Relational data storage |
+| Resend | Transactional email delivery |
 | Git & GitHub | Version control |
 
 ## Supported Games
@@ -148,6 +156,11 @@ Make sure you have installed:
 - npm
 - Git
 
+You also need:
+
+- A Supabase project.
+- A Resend account for email-based OTP delivery.
+
 ### 1. Clone the repository
 
 ```bash
@@ -173,13 +186,37 @@ Create a `.env.local` file in the project root:
 ```env
 SUPABASE_URL=your_supabase_project_url
 SUPABASE_SECRET_KEY=your_supabase_secret_key
+
+RESEND_API_KEY=your_resend_api_key
+RESEND_FROM_EMAIL=TopUpKu <onboarding@resend.dev>
+
+ORDER_OTP_SECRET=your_random_32_byte_secret
 ```
 
-Replace the placeholder values with your own Supabase credentials.
+Replace the placeholder values with your own credentials.
 
-Never commit your `.env.local` file or expose your Supabase secret key in client-side code.
+**Important:**
 
-### 5. Run the development server
+- `SUPABASE_SECRET_KEY` must only be used in server-side code.
+- `RESEND_API_KEY` must never be exposed in client-side code.
+- `ORDER_OTP_SECRET` should be a strong, randomly generated secret.
+- The Resend testing sender can only send to the account owner's verified email address. A verified sending domain is required to send emails to arbitrary customer addresses.
+- Never commit your `.env.local` file or expose secret keys in your repository.
+
+### 5. Configure the database
+
+TopUpKu uses Supabase PostgreSQL.
+
+Create the required database tables:
+
+- `orders` — Stores customer order information.
+- `order_recovery_otps` — Stores hashed OTP verification records and expiration information.
+
+Enable Row Level Security (RLS) and configure appropriate permissions for database access.
+
+The recovery API uses server-side Supabase credentials to access the required records.
+
+### 6. Run the development server
 
 ```bash
 npm run dev
@@ -187,7 +224,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### 6. Production build
+### 7. Production build
 
 ```bash
 npm run build
@@ -195,13 +232,17 @@ npm run build
 
 ## Database
 
-TopUpKu uses Supabase with PostgreSQL to store order information.
+TopUpKu uses Supabase with PostgreSQL to store order and recovery information.
+
+### Orders Table
 
 The `orders` table includes:
 
 - Order ID
 - Order code
 - Customer name
+- Customer email
+- Customer phone
 - Game
 - User ID
 - Zone ID
@@ -211,7 +252,19 @@ The `orders` table includes:
 - Order status
 - Creation timestamp
 
-Row Level Security (RLS) is enabled on the orders table.
+### Order Recovery OTP Table
+
+The `order_recovery_otps` table includes:
+
+- Recovery record ID
+- Customer email
+- Hashed OTP
+- Expiration timestamp
+- Verification attempt counter
+- OTP consumption timestamp
+- Creation timestamp
+
+OTP records are used to support the email-based order recovery process.
 
 ## Project Structure
 
@@ -220,6 +273,11 @@ topupku/
 ├── app/
 │   ├── api/
 │   │   └── orders/
+│   │       ├── recovery/
+│   │       │   ├── request/
+│   │       │   │   └── route.ts
+│   │       │   └── verify/
+│   │       │       └── route.ts
 │   │       └── route.ts
 │   ├── checkout/
 │   │   └── page.tsx
@@ -234,6 +292,7 @@ topupku/
 │   └── games/
 ├── docs/
 │   └── screenshots/
+├── .env.local
 ├── package.json
 └── README.md
 ```
@@ -246,14 +305,17 @@ TopUpKu is currently a functional prototype for learning and portfolio purposes.
 - No real QRIS, e-wallet, or virtual account transactions are performed.
 - Order fulfillment is not connected to an official game top-up provider.
 - Order status remains pending unless updated separately.
-- Email and WhatsApp OTP delivery and verification are simulated.
+- Email-based OTP recovery is implemented, but customer-facing email delivery requires a verified Resend domain.
+- WhatsApp recovery is not yet available.
 - Search history is stored locally in the browser and is not synchronized across devices.
+- Public order lookup endpoints are intended for prototype testing only.
 
-The current public order lookup endpoints are intended for prototype testing only. Additional authentication, authorization, rate limiting, and privacy protections are required before production use.
+Additional authentication, authorization, API rate limiting, and privacy protections are required before production deployment.
 
 ## Roadmap
 
 ### Completed
+
 - [x] Homepage and game catalog
 - [x] Game selection interface
 - [x] Checkout page
@@ -261,39 +323,52 @@ The current public order lookup endpoints are intended for prototype testing onl
 - [x] Order creation API
 - [x] Order history page
 - [x] Search history
-- [x] Order recovery interface (prototype)
+- [x] Order recovery interface
+- [x] Email-based OTP request API
+- [x] OTP verification API
+- [x] Supabase OTP storage
+- [x] Resend email service integration
+- [x] Recovered order number display
 - [x] GitHub repository
 
 ### Future Development Plans
 
 **Code Quality & Security**
+
 - [ ] Code refactoring and improved project structure
 - [ ] Improved order code generation
 - [ ] API security and data protection improvements
+- [ ] IP-based rate limiting and abuse prevention
 - [ ] Customer authentication
 - [ ] Secure order lookup and verification
 
 **Product Catalog Expansion**
+
 - [ ] Expand the catalog beyond game diamonds and currencies
 - [ ] Add game memberships and subscription products
 - [ ] Add digital game vouchers and gift cards
 - [ ] Support more games and digital products
 
 **Payment & Order Management**
+
 - [ ] Integrate a real payment gateway
 - [ ] Implement real payment verification and webhooks
-- [ ] Implement OTP-based order verification
 - [ ] Implement real-time order status updates
+- [ ] Implement automated order fulfillment
 
 **Integration & Deployment**
+
+- [ ] Verify a custom sending domain for Resend
+- [ ] Complete end-to-end email recovery testing
 - [ ] Integrate official game top-up providers
 - [ ] Integrate digital product providers
 - [ ] Production deployment
 
-
 ## Disclaimer
 
-TopUpKu is an independent learning and portfolio project. Payment processing and game top-up fulfillment are simulated and are not available for real transactions.
+TopUpKu is an independent learning and portfolio project.
+
+Payment processing and game top-up fulfillment are not available for real transactions.
 
 This project is not affiliated with or officially endorsed by the game publishers mentioned above.
 
