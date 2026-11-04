@@ -22,6 +22,7 @@ TopUpKu is designed to provide a simple and user-friendly experience for browsin
 
 ### Search History
 ![Search History](docs/screenshots/search-history.png)
+![Search History](docs/screenshots/search-history2.png)
 
 Users can review their previous searches, repeat a search, and manage their local search history.
 
@@ -33,6 +34,7 @@ An order number recovery feature that allows users to recover previous order num
 WhatsApp recovery is displayed as a future feature and is currently unavailable.
 
 ### Email Recovery
+![Email Recovery](docs/screenshots/order-recovery-email2.png)
 ![Email Recovery](docs/screenshots/order-recovery-email.png)
 
 Users can request an order recovery verification code using their registered email address.
@@ -40,6 +42,7 @@ Users can request an order recovery verification code using their registered ema
 The backend checks whether the email is associated with existing order records before processing the recovery request.
 
 ### OTP Verification
+![OTP Verification](docs/screenshots/otp-verification2.png)
 ![OTP Verification](docs/screenshots/otp-verification.png)
 
 An email-based OTP verification process integrated with the Resend email service.
