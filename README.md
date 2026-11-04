@@ -28,25 +28,58 @@ Users can review their previous searches, repeat a search, and manage their loca
 ### Forgot Order Number
 ![Forgot Order Number](docs/screenshots/forgot-order-number.png)
 
-A prototype order-number recovery flow with Email and WhatsApp options.
+An order number recovery feature that allows users to recover their previous order numbers using email verification.
+
+WhatsApp recovery is displayed as a future feature and is currently unavailable.
 
 ### Email Recovery
 ![Email Recovery](docs/screenshots/order-recovery-email.png)
 
-A prototype interface for requesting order number recovery through email.
+Users can request an order recovery verification code using their registered email address.
+
+The system checks the email against existing order records before processing the recovery request.
 
 ### OTP Verification
 ![OTP Verification](docs/screenshots/otp-verification.png)
 
-A simulated OTP verification interface for the order recovery process.
+An email-based OTP verification process integrated with the Resend email service.
+
+- Six-digit verification code.
+- OTP expiration after 5 minutes.
+- Verification handled through a backend API.
+- OTP values are securely hashed before being stored in Supabase.
 
 ### Recovery Result
 ![Recovery Result](docs/screenshots/recovered-order-number.png)
 
-The result interface for the order recovery flow.
+After successful OTP verification, the system retrieves and displays order numbers associated with the verified email address.
 
-> **Note:** Email/WhatsApp OTP delivery, verification, and actual order number retrieval are simulated and are not connected to real messaging services.
+Users can copy their recovered order numbers directly from the result interface.
 
+### Email Notification
+
+The order recovery process uses Resend to deliver verification emails.
+
+The email notification contains:
+- TopUpKu branding.
+- A six-digit OTP verification code.
+- Verification expiration information.
+- Instructions for completing the recovery process.
+
+### Backend Integration
+
+The order recovery feature is connected to:
+
+- **Supabase:** Stores order records and OTP verification data.
+- **Resend:** Handles email delivery.
+- **Next.js API Routes:** Processes OTP requests, verification, and order number retrieval.
+
+### Feature Notes
+
+- Email-based OTP recovery is implemented and integrated with the backend.
+- Email delivery to arbitrary customer addresses requires a verified sending domain in Resend.
+- WhatsApp recovery is not yet available.
+- Recovered order numbers are displayed only after successful OTP verification.
 
 ## Features
 
