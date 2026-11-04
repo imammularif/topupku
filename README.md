@@ -192,7 +192,7 @@ SUPABASE_URL=your_supabase_project_url
 SUPABASE_SECRET_KEY=your_supabase_secret_key
 
 RESEND_API_KEY=your_resend_api_key
-RESEND_FROM_EMAIL=TopUpKu <onboarding@resend.dev>
+RESEND_FROM_EMAIL=TopUpKu <secret mail>
 
 ORDER_OTP_SECRET=your_random_32_byte_secret
 ```
