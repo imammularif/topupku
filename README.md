@@ -320,54 +320,63 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 
 ### Completed
 
+**Core Application**
 - [x] Homepage and game catalog
 - [x] Game selection interface
 - [x] Checkout page
-- [x] Supabase database integration
 - [x] Order creation API
 - [x] Order history page
-- [x] Search history
-- [x] Order recovery interface
-- [x] Email-based OTP request API
+- [x] Order lookup by order number or game account details
+- [x] Search history management
+
+**Backend & Integration**
+- [x] Supabase database integration
+- [x] Email-based OTP recovery request API
 - [x] OTP verification API
-- [x] Supabase OTP storage
+- [x] Secure OTP hashing and expiration handling
 - [x] Resend email service integration
-- [x] Recovered order number display
-- [x] GitHub repository
+- [x] Recovered order number display and copy functionality
+
+**Code Structure & Development**
+- [x] Modular homepage architecture
+- [x] Reusable UI components:
+  - [x] Navbar
+  - [x] HeroSection
+  - [x] GameSection
+  - [x] GameCard
+  - [x] OrderModal
+- [x] Centralized game and product data management
+- [x] GitHub repository and version control
 
 ### Future Development Plans
 
 **Code Quality & Security**
-
-- [ ] Code refactoring and improved project structure
-- [ ] Improved order code generation
-- [ ] API security and data protection improvements
-- [ ] IP-based rate limiting and abuse prevention
-- [ ] Customer authentication
-- [ ] Secure order lookup and verification
+- [ ] Further code refactoring and service-layer separation
+- [ ] Implement reusable order history and recovery hooks
+- [ ] Improve order code generation
+- [ ] Strengthen API security and data protection
+- [ ] Implement IP-based rate limiting and abuse prevention
+- [ ] Implement customer authentication
+- [ ] Improve order lookup security and verification
 
 **Product Catalog Expansion**
-
 - [ ] Expand the catalog beyond game diamonds and currencies
 - [ ] Add game memberships and subscription products
 - [ ] Add digital game vouchers and gift cards
 - [ ] Support more games and digital products
 
 **Payment & Order Management**
-
 - [ ] Integrate a real payment gateway
-- [ ] Implement real payment verification and webhooks
+- [ ] Implement payment verification and webhooks
 - [ ] Implement real-time order status updates
 - [ ] Implement automated order fulfillment
 
 **Integration & Deployment**
-
 - [ ] Verify a custom sending domain for Resend
 - [ ] Complete end-to-end email recovery testing
 - [ ] Integrate official game top-up providers
 - [ ] Integrate digital product providers
-- [ ] Production deployment
-
+- [ ] Prepare production deployment
 ## Customer Support
 
 TopUpKu provides an email contact channel for users who need assistance or have questions regarding their orders and transactions.
