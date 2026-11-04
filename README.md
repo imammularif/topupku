@@ -290,16 +290,33 @@ topupku/
 │   ├── globals.css
 │   ├── layout.tsx
 │   └── page.tsx
+├── components/
+│   ├── GameCard.tsx
+│   ├── GameSection.tsx
+│   ├── HeroSection.tsx
+│   ├── Navbar.tsx
+│   └── OrderModal.tsx
+├── data/
+│   └── games.ts
 ├── lib/
 │   └── supabaseAdmin.ts
 ├── public/
 │   └── games/
 ├── docs/
 │   └── screenshots/
-├── .env.local
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
+
+### Directory Overview
+
+- **app/** – Next.js App Router pages, layouts, and API endpoints.
+- **components/** – Reusable UI components for the homepage and game selection experience.
+- **data/** – Centralized game catalog and product data.
+- **lib/** – Shared utilities and backend integration configurations.
+- **public/** – Static assets, including game images.
+- **docs/** – Project documentation and application screenshots.
 
 ## Current Limitations
 
