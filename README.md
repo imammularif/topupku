@@ -28,9 +28,27 @@ Users can review their previous searches, repeat a search, and manage their loca
 ### Forgot Order Number
 ![Forgot Order Number](docs/screenshots/forgot-order-number.png)
 
-A prototype order-number recovery flow with Email and WhatsApp options. OTP delivery and verification are simulated and are not connected to real messaging services.
+A prototype order-number recovery flow with Email and WhatsApp options.
 
-### Features
+### Email Recovery
+![Email Recovery](docs/screenshots/order-recovery-email.png)
+
+A prototype interface for requesting order number recovery through email.
+
+### OTP Verification
+![OTP Verification](docs/screenshots/otp-verification.png)
+
+A simulated OTP verification interface for the order recovery process.
+
+### Recovery Result
+![Recovery Result](docs/screenshots/recovered-order-number.png)
+
+The result interface for the order recovery flow.
+
+> **Note:** Email/WhatsApp OTP delivery, verification, and actual order number retrieval are simulated and are not connected to real messaging services.
+
+
+## Features
 
 - Game selection and product catalog
 - Game account details input (User ID and Zone ID)
