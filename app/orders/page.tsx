@@ -57,6 +57,8 @@ export default function OrdersPage() {
   const [recoveryContact, setRecoveryContact] = useState("");
   const [otp, setOtp] = useState("");
   const [recoveryMessage, setRecoveryMessage] = useState("");
+  const [recoveryLoading, setRecoveryLoading] = useState(false);
+  const [recoveredOrderCodes, setRecoveredOrderCodes] = useState<string[]>([]);
 
   // Membaca riwayat dari Local Storage saat halaman dibuka.
   useEffect(() => {
@@ -229,67 +231,105 @@ export default function OrdersPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+
   function openRecovery() {
-    setShowRecovery(true);
-    setRecoveryStep("method");
-    setRecoveryMethod("email");
-    setRecoveryContact("");
-    setOtp("");
-    setRecoveryMessage("");
-  }
+  setShowRecovery(true);
+  setRecoveryStep("method");
+  setRecoveryMethod("email");
+  setRecoveryContact("");
+  setOtp("");
+  setRecoveryMessage("");
+  setRecoveredOrderCodes([]);
+}
 
   function closeRecovery() {
     setShowRecovery(false);
   }
 
-  function handleSendOTP() {
-    if (!recoveryContact.trim()) {
-      setRecoveryMessage(
-        recoveryMethod === "email"
-          ? "Masukkan alamat email terlebih dahulu."
-          : "Masukkan nomor WhatsApp terlebih dahulu."
-      );
-      return;
-    }
+  async function handleSendOTP() {
+  const email = recoveryContact.trim().toLowerCase();
 
-    if (
-      recoveryMethod === "email" &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recoveryContact.trim())
-    ) {
-      setRecoveryMessage("Format email tidak valid.");
-      return;
-    }
-
-    if (
-      recoveryMethod === "whatsapp" &&
-      !/^(08\d{8,12}|\+628\d{8,11}|628\d{8,11})$/.test(
-        recoveryContact.replace(/[\s-]/g, "")
-      )
-    ) {
-      setRecoveryMessage("Format nomor WhatsApp tidak valid.");
-      return;
-    }
-
-    setRecoveryMessage(
-      "Simulasi berhasil! Kode OTP tidak benar-benar dikirim."
-    );
-    setRecoveryStep("otp");
+  if (!email) {
+    setRecoveryMessage("Masukkan alamat email terlebih dahulu.");
+    return;
   }
 
-  function handleVerifyOTP() {
-    if (!otp.trim()) {
-      setRecoveryMessage("Masukkan kode OTP terlebih dahulu.");
-      return;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    setRecoveryMessage("Format email tidak valid.");
+    return;
+  }
+
+  setRecoveryLoading(true);
+  setRecoveryMessage("");
+
+  try {
+    const response = await fetch("/api/orders/recovery/request", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Gagal meminta kode OTP.");
     }
 
-    if (!/^\d{6}$/.test(otp)) {
-      setRecoveryMessage("Kode OTP harus terdiri dari 6 angka.");
-      return;
+    setRecoveryContact(email);
+    setRecoveryStep("otp");
+    setRecoveryMessage(result.message);
+  } catch (err) {
+    setRecoveryMessage(
+      err instanceof Error ? err.message : "Terjadi kesalahan."
+    );
+  } finally {
+    setRecoveryLoading(false);
+  }
+}
+
+async function handleVerifyOTP() {
+  const email = recoveryContact.trim().toLowerCase();
+
+  if (!/^\d{6}$/.test(otp)) {
+    setRecoveryMessage("Kode OTP harus terdiri dari 6 angka.");
+    return;
+  }
+
+  setRecoveryLoading(true);
+  setRecoveryMessage("");
+
+  try {
+    const response = await fetch("/api/orders/recovery/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        otp,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Verifikasi OTP gagal.");
     }
 
+    setRecoveredOrderCodes(result.orderCodes || []);
     setRecoveryMessage("");
     setRecoveryStep("result");
+  } catch (err) {
+    setRecoveryMessage(
+      err instanceof Error ? err.message : "Terjadi kesalahan."
+    );
+  } finally {
+    setRecoveryLoading(false);
   }
+}
+
 
   function formatPrice(price: number) {
     return `Rp${price.toLocaleString("id-ID")}`;
@@ -672,28 +712,18 @@ export default function OrdersPage() {
 
                     <span className="text-slate-400">›</span>
                   </button>
-
                   <button
                     type="button"
-                    onClick={() => {
-                      setRecoveryMethod("whatsapp");
-                      setRecoveryStep("contact");
-                      setRecoveryMessage("");
-                    }}
-                    className="flex w-full items-center gap-4 rounded-xl border border-slate-700 bg-slate-800 p-4 text-left transition hover:border-cyan-400"
+                    disabled
+                    className="flex w-full cursor-not-allowed items-center gap-4 rounded-xl border border-slate-700 bg-slate-800 p-4 text-left opacity-50"
                   >
-                    <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-500/10 text-2xl">
-                      💬
-                    </span>
-
+                    <span className="text-2xl">💬</span>
                     <span className="flex-1">
                       <span className="block font-bold">WhatsApp</span>
                       <span className="text-xs text-slate-400">
-                        Terima kode melalui WhatsApp
+                        Segera tersedia
                       </span>
                     </span>
-
-                    <span className="text-slate-400">›</span>
                   </button>
                 </div>
               </>
@@ -747,9 +777,10 @@ export default function OrdersPage() {
                 <button
                   type="button"
                   onClick={handleSendOTP}
-                  className="mt-5 w-full rounded-lg bg-cyan-500 py-3 font-bold text-slate-950 transition hover:bg-cyan-400"
+                  disabled={recoveryLoading}
+                  className="mt-5 w-full rounded-lg bg-cyan-500 py-3 font-bold text-slate-950 transition hover:bg-cyan-400 disabled:opacity-50"
                 >
-                  Kirim Kode Verifikasi
+                  {recoveryLoading ? "Mengirim..." : "Kirim Kode Verifikasi"}
                 </button>
 
                 <button
@@ -777,7 +808,7 @@ export default function OrdersPage() {
 
                 <p className="mb-6 text-sm text-slate-400">
                   Masukkan kode verifikasi 6 digit.
-                  Dalam prototype ini, kode tidak benar-benar dikirim.
+                  Kode verifikasi telah diminta melalui email kamu. Masukkan kode 6 digit yang diterima. Kode berlaku selama 5 menit.
                 </p>
 
                 <label className="mb-2 block text-sm font-semibold">
@@ -806,9 +837,10 @@ export default function OrdersPage() {
                 <button
                   type="button"
                   onClick={handleVerifyOTP}
-                  className="mt-5 w-full rounded-lg bg-cyan-500 py-3 font-bold text-slate-950 hover:bg-cyan-400"
+                  disabled={recoveryLoading}
+                  className="mt-5 w-full rounded-lg bg-cyan-500 py-3 font-bold text-slate-950 hover:bg-cyan-400 disabled:opacity-50"
                 >
-                  Verifikasi Kode
+                   {recoveryLoading ? "Memverifikasi..." : "Verifikasi Kode"}
                 </button>
 
                 <button
@@ -836,19 +868,44 @@ export default function OrdersPage() {
                 </h2>
 
                 <p className="mb-6 text-sm leading-relaxed text-slate-400">
-                  Simulasi verifikasi berhasil dilakukan.
-                  Pada sistem asli, nomor pesanan yang cocok akan
-                  ditampilkan di bagian ini.
+                  Berikut nomor pesanan yang terhubung dengan email kamu.
                 </p>
 
-                <div className="rounded-xl border border-dashed border-slate-700 bg-slate-950 p-5 text-center">
-                  <p className="text-sm text-slate-400">
-                    Nomor Pesanan
-                  </p>
-                  <p className="mt-2 font-bold text-cyan-400">
-                    Akan ditampilkan setelah integrasi sistem
-                  </p>
+                <div className="space-y-3">
+                  {recoveredOrderCodes.length > 0 ? (
+                    recoveredOrderCodes.map((code) => (
+                      <div
+                        key={code}
+                        className="flex items-center justify-between gap-3 rounded-xl border border-slate-700 bg-slate-950 p-4"
+                      >
+                        <span className="break-all font-bold text-cyan-400">
+                          {code}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(code);
+                            setRecoveryMessage("Nomor pesanan berhasil disalin.");
+                          }}
+                          className="shrink-0 rounded-lg bg-slate-800 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-700"
+                        >
+                          Salin
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="rounded-xl border border-dashed border-slate-700 bg-slate-950 p-5 text-center text-sm text-slate-400">
+                      Tidak ada nomor pesanan yang ditemukan.
+                    </div>
+                  )}
                 </div>
+
+                {recoveryMessage && (
+                  <p className="mt-3 text-xs text-green-300">
+                    {recoveryMessage}
+                  </p>
+                )}
 
                 <button
                   type="button"
