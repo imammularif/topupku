@@ -22,6 +22,7 @@ TopUpKu is designed to provide a simple and user-friendly experience for browsin
 
 ### Search History
 ![Search History](docs/screenshots/search-history.png)
+![Search History](docs/screenshots/search-history2.png)
 
 Users can review their previous searches, repeat a search, and manage their local search history.
 
