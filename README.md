@@ -368,6 +368,23 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [ ] Integrate digital product providers
 - [ ] Production deployment
 
+Customer Support
+
+TopUpKu provides an email contact channel for users who need assistance or have questions regarding their orders and transactions.
+
+For customer support, transaction inquiries, order issues, or other questions related to TopUpKu, users can contact:
+
+Email: your-support-email@example.com
+
+When contacting support, users are encouraged to include:
+
+* Order number (if available).
+* Game name and product.
+* Description of the issue or inquiry.
+* Relevant transaction details.
+
+Note: Never share passwords, OTP verification codes, or sensitive payment information through email.
+
 ## Disclaimer
 
 TopUpKu is an independent learning and portfolio project.
