@@ -368,6 +368,14 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 
 ### Future Development Plans
 
+**Email & OTP Enhancement**
+- [ ] Create a customizable HTML email template for TopUpKu OTP messages.
+- [ ] Customize email subject, content, branding, and visual design.
+- [ ] Implement a 5-minute OTP countdown timer on the verification form.
+- [ ] Display the remaining OTP validity time in real time.
+- [ ] Add OTP resend functionality after expiration.
+- [ ] Keep OTP expiration and verification checks enforced by the backend.
+
 **Code Quality & Security**
 - [ ] Further code refactoring and service-layer separation.
 - [ ] Implement reusable order history and recovery hooks.
