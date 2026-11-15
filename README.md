@@ -376,6 +376,13 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [ ] Add OTP resend functionality after expiration.
 - [ ] Keep OTP expiration and verification checks enforced by the backend.
 
+**User Experience Improvements**
+- [ ] Add copy order number notification.
+- [ ] Improve checkout form validation.
+- [ ] Add loading states for API requests.
+- [ ] Prevent duplicate submissions during order processing.
+- [ ] Improve responsive design for mobile devices.
+
 **Code Quality & Security**
 - [ ] Further code refactoring and service-layer separation.
 - [ ] Implement reusable order history and recovery hooks.
