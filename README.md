@@ -73,17 +73,23 @@ Users can copy their recovered order numbers directly from the result interface.
 
 ## Features
 
-- Game selection and product catalog.
-- Game account details input (User ID and Zone ID).
-- Product selection and checkout flow.
-- Simulated payment method selection.
-- Order creation and order history management.
-- Order lookup by order number or game account details.
-- Search history management.
-- Forgot order number interface.
-- Email-based OTP order recovery.
-- OTP verification and expiration handling.
-- Recovered order number display and copy functionality.
+**Game Catalog & Checkout**
+- Browse available games and their product catalogs.
+- Enter game account details (User ID and Zone ID).
+- Select game products and proceed through the checkout flow.
+- Choose from simulated payment methods.
+
+**Order Management**
+- Create and manage top-up orders.
+- View order history.
+- Look up orders using order numbers or game account details.
+- Manage search history.
+
+**Order Recovery**
+- Access the forgot order number feature.
+- Recover order numbers through email-based OTP verification.
+- Verify OTP codes with expiration handling.
+- Display and copy recovered order numbers.
 
 ## Planned Product Expansion
 
