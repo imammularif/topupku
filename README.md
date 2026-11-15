@@ -1,10 +1,21 @@
 # TopUpKu — Game Top-Up Website
 
+![Project Status](https://img.shields.io/badge/Project%20Status-On%20Hiatus-orange?style=for-the-badge)
+
+> **Development Notice**
+>
+> TopUpKu is temporarily on hiatus while the developer focuses on other personal and professional priorities. Development will resume when circumstances allow.
+
 A game top-up website prototype built with **Next.js, TypeScript, and Supabase**.
 
 TopUpKu provides a simple and user-friendly platform for browsing game products, placing top-up orders, and tracking order history.
 
 > **Project Status:** Functional prototype — Order management, Supabase database integration, and email-based order recovery are implemented using Resend. Payment gateway and game top-up provider integrations are planned for future development.
+
+---
+
+
+<!-- Continue with your existing README sections here -->
 
 ## Screenshots
 
