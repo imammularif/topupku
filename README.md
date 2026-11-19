@@ -369,8 +369,13 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [x] Email-based OTP recovery request API.
 - [x] OTP verification API.
 - [x] Secure OTP hashing and expiration handling.
+- [x] Five-minute OTP expiration enforcement on the backend.
 - [x] Resend email service integration.
+- [x] Custom HTML email template for OTP recovery.
+- [x] TOPUPKU email branding, subject, content, and visual design.
+- [x] Email OTP delivery testing.
 - [x] Recovered order number display and copy functionality.
+- [x] OTP request cooldown handling.
 
 **Code Structure & Development**
 - [x] Modular homepage architecture.
@@ -382,16 +387,19 @@ Additional authentication, authorization, API rate limiting, and privacy protect
   - [x] OrderModal.
 - [x] Centralized game and product data management.
 - [x] GitHub repository and version control.
+- [x] Next.js 16.4.6 upgrade.
+- [x] TypeScript type checking.
+- [x] Production build verification.
+- [x] GitHub synchronization and update deployment to the main branch.
 
 ### Future Development Plans
 
 **Email & OTP Enhancement**
-- [ ] Create a customizable HTML email template for TopUpKu OTP messages.
-- [ ] Customize email subject, content, branding, and visual design.
-- [ ] Implement a 5-minute OTP countdown timer on the verification form.
+- [ ] Implement a five-minute OTP countdown timer on the verification form.
 - [ ] Display the remaining OTP validity time in real time.
-- [ ] Add OTP resend functionality after expiration.
-- [ ] Keep OTP expiration and verification checks enforced by the backend.
+- [ ] Add a clear OTP resend interface after the cooldown period.
+- [ ] Improve email delivery monitoring and error handling.
+- [ ] Verify a custom sending domain for Resend.
 
 **User Experience Improvements**
 - [ ] Add copy order number notification.
@@ -416,7 +424,7 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [ ] Integrate supported e-wallet methods.
 - [ ] Implement payment webhooks.
 - [ ] Implement payment status verification.
-- [ ] Prepare Production integration.
+- [ ] Prepare production integration.
 
 **Supplier Integration**
 - [ ] Research suitable game top-up providers.
@@ -432,7 +440,6 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [ ] Support more games and digital products.
 
 **Integration & Deployment**
-- [ ] Verify a custom sending domain for Resend.
 - [ ] Complete end-to-end email recovery testing.
 - [ ] Prepare production deployment.
 - [ ] Complete security and transaction testing.
