@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -41,11 +42,7 @@ function CheckoutContent() {
   const [errorMessage, setErrorMessage] = useState("");
 
   async function handleCreateOrder() {
-    if (
-      !customerName.trim() ||
-      !email.trim() ||
-      !phone.trim()
-    ) {
+    if (!customerName.trim() || !email.trim() || !phone.trim()) {
       setErrorMessage("Nama, email, dan nomor HP wajib diisi.");
       return;
     }
@@ -132,9 +129,7 @@ function CheckoutContent() {
 
             {/* RINGKASAN PESANAN */}
             <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-              <h2 className="mb-5 text-xl font-bold">
-                Ringkasan Pesanan
-              </h2>
+              <h2 className="mb-5 text-xl font-bold">Ringkasan Pesanan</h2>
 
               <div className="space-y-4 text-sm">
                 <div className="flex justify-between gap-4">
@@ -286,12 +281,12 @@ function CheckoutContent() {
                 {isSubmitting ? "Menyimpan Pesanan..." : "Buat Pesanan"}
               </button>
 
-              <a
+              <Link
                 href="/"
                 className="mt-4 block text-center text-sm text-slate-400 hover:text-white"
               >
                 Kembali ke Beranda
-              </a>
+              </Link>
             </div>
           </>
         ) : (
@@ -310,9 +305,7 @@ function CheckoutContent() {
             <div className="my-7 rounded-xl bg-slate-950 p-5 text-left">
               <div className="mb-4">
                 <p className="text-sm text-slate-400">Nomor Pesanan</p>
-                <p className="mt-1 font-bold text-cyan-400">
-                  {orderId}
-                </p>
+                <p className="mt-1 font-bold text-cyan-400">{orderId}</p>
               </div>
 
               <div className="mb-4">
@@ -341,9 +334,7 @@ function CheckoutContent() {
               </div>
 
               <div className="mb-4">
-                <p className="text-sm text-slate-400">
-                  Metode Pembayaran
-                </p>
+                <p className="text-sm text-slate-400">Metode Pembayaran</p>
                 <p className="mt-1 font-semibold">{selectedPayment}</p>
               </div>
 
@@ -375,12 +366,12 @@ function CheckoutContent() {
               Cek Riwayat Pesanan
             </a>
 
-            <a
+            <Link
               href="/"
               className="block w-full rounded-lg bg-cyan-500 py-3 font-bold text-slate-950 hover:bg-cyan-400"
             >
               Kembali ke Beranda
-            </a>
+            </Link>
           </div>
         )}
       </div>

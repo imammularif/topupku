@@ -4,7 +4,6 @@ import { createHmac, randomInt } from "node:crypto";
 import { Resend } from "resend";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const OTP_SECRET = process.env.ORDER_OTP_SECRET;
@@ -152,25 +151,124 @@ export async function POST(request: Request) {
       );
     }
 
-    // Kirim OTP melalui Resend.
+    // Kirim OTP melalui Resend dengan template HTML TOPUPKU.
     const { error: emailError } = await resend.emails.send({
       from: FROM_EMAIL,
       to: [email],
-      subject: "Kode Verifikasi Pemulihan Pesanan TopUpKu",
+      subject: "Kode Verifikasi Pemulihan Pesanan TOPUPKU",
+
       text: [
-        `Halo!`,
-        ``,
-        `Kode verifikasi pemulihan nomor pesanan TopUpKu kamu:`,
-        ``,
-        `${otp}`,
-        ``,
+        "TOPUPKU",
+        "",
+        "Verifikasi Pemulihan Pesanan",
+        "",
+        "Halo!",
+        "Gunakan kode berikut untuk memverifikasi permintaan pemulihan pesanan kamu:",
+        "",
+        otp,
+        "",
         `Kode berlaku selama ${OTP_EXPIRY_MINUTES} menit.`,
-        `Jangan bagikan kode ini kepada siapa pun.`,
-        ``,
-        `Jika kamu tidak meminta kode ini, abaikan email ini.`,
-        ``,
-        `Tim TopUpKu`,
+        "Jangan bagikan kode ini kepada siapa pun.",
+        "",
+        "Jika kamu tidak meminta kode ini, abaikan email ini.",
+        "",
+        "Tim TOPUPKU",
       ].join("\n"),
+
+      html: `
+        <!DOCTYPE html>
+        <html lang="id">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Verifikasi TOPUPKU</title>
+          </head>
+
+          <body style="margin:0;padding:0;background-color:#f3f4f6;font-family:Arial,Helvetica,sans-serif;color:#1f2937;">
+
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f3f4f6;padding:32px 12px;">
+              <tr>
+                <td align="center">
+
+                  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:480px;background-color:#ffffff;border-radius:16px;overflow:hidden;">
+
+                    <!-- Header -->
+                    <tr>
+                      <td align="center" style="background-color:#111827;padding:28px 20px;">
+                        <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:800;letter-spacing:2px;">
+                          TOPUPKU
+                        </h1>
+
+                        <p style="margin:8px 0 0;color:#d1d5db;font-size:11px;letter-spacing:2px;">
+                          DIGITAL TOP-UP &amp; PAYMENT
+                        </p>
+                      </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                      <td style="padding:32px 28px;">
+
+                        <h2 style="margin:0 0 16px;text-align:center;color:#111827;font-size:22px;">
+                          Verifikasi Pemulihan Pesanan
+                        </h2>
+
+                        <p style="margin:0 0 24px;text-align:center;color:#6b7280;font-size:14px;line-height:1.7;">
+                          Halo! Gunakan kode berikut untuk memverifikasi permintaan pemulihan pesanan kamu.
+                        </p>
+
+                        <!-- OTP -->
+                        <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td align="center" style="background-color:#eff6ff;border:1px solid #dbeafe;border-radius:12px;padding:24px 12px;">
+
+                              <p style="margin:0 0 10px;color:#64748b;font-size:11px;font-weight:700;letter-spacing:2px;">
+                                KODE VERIFIKASI OTP
+                              </p>
+
+                              <p style="margin:0;color:#2563eb;font-size:36px;font-weight:800;letter-spacing:10px;">
+                                ${otp}
+                              </p>
+
+                            </td>
+                          </tr>
+                        </table>
+
+                        <p style="margin:24px 0 8px;text-align:center;color:#374151;font-size:14px;line-height:1.6;">
+                          Kode berlaku selama
+                          <strong>${OTP_EXPIRY_MINUTES} menit</strong>.
+                        </p>
+
+                        <p style="margin:0;text-align:center;color:#dc2626;font-size:13px;">
+                          Jangan bagikan kode ini kepada siapa pun.
+                        </p>
+
+                        <hr style="margin:28px 0;border:0;border-top:1px solid #e5e7eb;" />
+
+                        <p style="margin:0;text-align:center;color:#9ca3af;font-size:12px;line-height:1.7;">
+                          Jika kamu tidak meminta kode ini, abaikan email ini.
+                        </p>
+
+                        <p style="margin:20px 0 0;text-align:center;color:#111827;font-size:14px;font-weight:700;">
+                          Tim TOPUPKU
+                        </p>
+
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Footer -->
+                  <p style="margin:20px 0 0;color:#9ca3af;font-size:11px;text-align:center;">
+                    &copy; TOPUPKU. All rights reserved.
+                  </p>
+
+                </td>
+              </tr>
+            </table>
+
+          </body>
+        </html>
+      `,
     });
 
     if (emailError) {

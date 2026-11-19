@@ -1,6 +1,8 @@
 
+
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { games, products, categories } from "../data/games";
@@ -8,7 +10,6 @@ import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import GameSection from "../components/GameSection";
 import OrderModal from "../components/OrderModal";
-
 
 export default function Home() {
   const router = useRouter();
@@ -68,7 +69,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-
       <Navbar
         searchOpen={searchOpen}
         setSearchOpen={setSearchOpen}
@@ -87,7 +87,6 @@ export default function Home() {
         categories={categories}
         onSelectGame={setSelectedGame}
       />
-
 
       {/* HOW IT WORKS */}
       <section className="border-y border-slate-800 bg-slate-900/50 px-5 py-20">
@@ -171,6 +170,7 @@ export default function Home() {
           </div>
 
           <button
+            type="button"
             onClick={() => router.push("/orders")}
             className="mt-7 rounded-xl bg-cyan-500 px-7 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-cyan-400 md:mt-0"
           >
@@ -182,7 +182,6 @@ export default function Home() {
       {/* FOOTER */}
       <footer className="border-t border-slate-800 bg-slate-950 px-5 py-12">
         <div className="mx-auto grid max-w-7xl gap-10 sm:grid-cols-2 md:grid-cols-3">
-
           <div>
             <h2 className="text-2xl font-extrabold tracking-tight text-cyan-400">
               TopUpKu.
@@ -200,17 +199,26 @@ export default function Home() {
             </h3>
 
             <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-              <a href="/" className="transition hover:text-cyan-400">
+              <Link
+                href="/"
+                className="transition hover:text-cyan-400"
+              >
                 Beranda
-              </a>
+              </Link>
 
-              <a href="#games" className="transition hover:text-cyan-400">
+              <a
+                href="#games"
+                className="transition hover:text-cyan-400"
+              >
                 Daftar Game
               </a>
 
-              <a href="/orders" className="transition hover:text-cyan-400">
+              <Link
+                href="/orders"
+                className="transition hover:text-cyan-400"
+              >
                 Riwayat Pesanan
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -220,11 +228,17 @@ export default function Home() {
             </h3>
 
             <div className="mt-5 flex flex-col gap-3 text-sm text-slate-400">
-              <a href="#bantuan" className="transition hover:text-cyan-400">
+              <a
+                href="#bantuan"
+                className="transition hover:text-cyan-400"
+              >
                 Bantuan
               </a>
 
-              <a href="#bantuan" className="transition hover:text-cyan-400">
+              <a
+                href="#bantuan"
+                className="transition hover:text-cyan-400"
+              >
                 Cara Top Up
               </a>
             </div>
@@ -248,7 +262,6 @@ export default function Home() {
         onClose={closeModal}
         onCheckout={handleCheckout}
       />
-
     </main>
   );
 }

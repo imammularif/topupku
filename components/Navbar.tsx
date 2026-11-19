@@ -1,6 +1,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type NavbarProps = {
@@ -22,27 +23,36 @@ export default function Navbar({
     <nav className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-5">
         <button
+          type="button"
           onClick={() => router.push("/")}
           className="shrink-0 text-2xl font-extrabold tracking-tight text-cyan-400"
         >
           TopUpKu<span className="text-white">.</span>
         </button>
 
+        {/* DESKTOP NAVIGATION */}
         <div className="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
-          <a href="/" className="transition hover:text-cyan-400">
+          <Link href="/" className="transition hover:text-cyan-400">
             Beranda
-          </a>
+          </Link>
+
           <a href="#games" className="transition hover:text-cyan-400">
             Daftar Game
           </a>
-          <a href="/orders" className="transition hover:text-cyan-400">
+
+          <Link
+            href="/orders"
+            className="transition hover:text-cyan-400"
+          >
             Riwayat Pesanan
-          </a>
+          </Link>
+
           <a href="#bantuan" className="transition hover:text-cyan-400">
             Bantuan
           </a>
         </div>
 
+        {/* SEARCH AND ORDER BUTTONS */}
         <div className="flex items-center gap-3">
           {searchOpen && (
             <input
@@ -51,6 +61,7 @@ export default function Navbar({
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
+
                 document.getElementById("games")?.scrollIntoView({
                   behavior: "smooth",
                 });
@@ -61,9 +72,13 @@ export default function Navbar({
           )}
 
           <button
+            type="button"
             onClick={() => {
               setSearchOpen(!searchOpen);
-              if (searchOpen) setSearchQuery("");
+
+              if (searchOpen) {
+                setSearchQuery("");
+              }
             }}
             className="rounded-lg border border-slate-700 px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:border-cyan-400 hover:text-cyan-400"
           >
@@ -71,6 +86,7 @@ export default function Navbar({
           </button>
 
           <button
+            type="button"
             onClick={() => router.push("/orders")}
             className="hidden rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-cyan-400 sm:block"
           >
@@ -79,25 +95,36 @@ export default function Navbar({
         </div>
       </div>
 
-        {/* MOBILE NAVIGATION */}
-        <div className="flex gap-6 overflow-x-auto border-t border-slate-800 px-5 py-3 text-xs font-medium text-slate-400 md:hidden">
-        <a href="/" className="whitespace-nowrap hover:text-cyan-400">
-            Beranda
+      {/* MOBILE NAVIGATION */}
+      <div className="flex gap-6 overflow-x-auto border-t border-slate-800 px-5 py-3 text-xs font-medium text-slate-400 md:hidden">
+        <Link
+          href="/"
+          className="whitespace-nowrap hover:text-cyan-400"
+        >
+          Beranda
+        </Link>
+
+        <a
+          href="#games"
+          className="whitespace-nowrap hover:text-cyan-400"
+        >
+          Daftar Game
         </a>
 
-        <a href="#games" className="whitespace-nowrap hover:text-cyan-400">
-            Daftar Game
-        </a>
+        <Link
+          href="/orders"
+          className="whitespace-nowrap hover:text-cyan-400"
+        >
+          Riwayat Pesanan
+        </Link>
 
-        <a href="/orders" className="whitespace-nowrap hover:text-cyan-400">
-            Riwayat Pesanan
+        <a
+          href="#bantuan"
+          className="whitespace-nowrap hover:text-cyan-400"
+        >
+          Bantuan
         </a>
-
-        <a href="#bantuan" className="whitespace-nowrap hover:text-cyan-400">
-            Bantuan
-        </a>
-        </div>
-      
+      </div>
     </nav>
   );
 }

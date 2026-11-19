@@ -1,6 +1,6 @@
-
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type Order = {
@@ -33,6 +33,10 @@ type RecoveryStep = "method" | "contact" | "otp" | "result";
 
 const HISTORY_KEY = "topupku_search_history";
 const MAX_HISTORY = 30;
+
+function createHistoryId() {
+  return crypto.randomUUID();
+}
 
 export default function OrdersPage() {
   const [mode, setMode] = useState<SearchMode>("orderCode");
@@ -69,6 +73,7 @@ export default function OrdersPage() {
         const parsed = JSON.parse(saved);
 
         if (Array.isArray(parsed)) {
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setHistory(parsed);
         }
       }
@@ -93,7 +98,7 @@ export default function OrdersPage() {
   function addSearchHistory(entry: Omit<SearchHistory, "id" | "searchedAt">) {
     const newEntry: SearchHistory = {
       ...entry,
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: crypto.randomUUID(),
       searchedAt: new Date().toISOString(),
     };
 
@@ -647,12 +652,12 @@ async function handleVerifyOTP() {
           </p>
         </section>
 
-        <a
+        <Link
           href="/"
           className="mt-8 block text-center text-sm text-slate-400 hover:text-white"
         >
           ← Kembali ke Beranda
-        </a>
+        </Link>
       </div>
 
       {/* POPUP LUPA NOMOR PESANAN */}
