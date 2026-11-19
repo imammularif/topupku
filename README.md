@@ -46,6 +46,7 @@ WhatsApp recovery is displayed as a future feature and is currently unavailable.
 
 ### Email Recovery
 ![Email Recovery](docs/screenshots/order-recovery-email.png)
+![Email Recovery](docs/screenshots/order-recovery-email2.png)
 ![OTP Verification](docs/screenshots/otp-verification2.png)
 
 Users can request an order recovery verification code using their registered email address.
