@@ -46,6 +46,7 @@ WhatsApp recovery is displayed as a future feature and is currently unavailable.
 
 ### Email Recovery
 ![Email Recovery](docs/screenshots/order-recovery-email.png)
+![Email Recovery](docs/screenshots/order-recovery-email2.png)
 ![OTP Verification](docs/screenshots/otp-verification2.png)
 
 Users can request an order recovery verification code using their registered email address.
@@ -376,6 +377,10 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [x] Email OTP delivery testing.
 - [x] Recovered order number display and copy functionality.
 - [x] OTP request cooldown handling.
+- [x] Real-time five-minute OTP countdown timer on the verification form.
+- [x] Dynamic remaining OTP validity display.
+- [x] OTP countdown warning when less than one minute remains.
+- [x] OTP expiration message when countdown reaches zero.
 
 **Code Structure & Development**
 - [x] Modular homepage architecture.
@@ -391,15 +396,15 @@ Additional authentication, authorization, API rate limiting, and privacy protect
 - [x] TypeScript type checking.
 - [x] Production build verification.
 - [x] GitHub synchronization and update deployment to the main branch.
+- [x] OTP countdown implementation committed and pushed to GitHub.
 
 ### Future Development Plans
 
 **Email & OTP Enhancement**
-- [ ] Implement a five-minute OTP countdown timer on the verification form.
-- [ ] Display the remaining OTP validity time in real time.
 - [ ] Add a clear OTP resend interface after the cooldown period.
 - [ ] Improve email delivery monitoring and error handling.
 - [ ] Verify a custom sending domain for Resend.
+- [ ] Perform additional OTP expiration and resend testing.
 
 **User Experience Improvements**
 - [ ] Add copy order number notification.
