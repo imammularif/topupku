@@ -53,7 +53,7 @@ Users can request an order recovery verification code using their registered ema
 The backend checks whether the email is associated with existing order records before processing the recovery request.
 
 ### OTP Verification
-![Email Recovery](docs/screenshots/order-recovery-email2.png)
+
 ![OTP Verification](docs/screenshots/otp-verification.png)
 
 An email-based OTP verification process integrated with Resend.
