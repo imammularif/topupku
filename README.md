@@ -55,7 +55,10 @@ The backend checks whether the email is associated with existing order records b
 
 ### OTP Verification
 
+![OTP Verification](docs/screenshots/otp-verification5.png)
 ![OTP Verification](docs/screenshots/otp-verification.png)
+![OTP Verification](docs/screenshots/otp-verification3.png)
+![OTP Verification](docs/screenshots/otp-verification4.png)
 
 An email-based OTP verification process integrated with Resend.
 
