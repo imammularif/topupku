@@ -61,8 +61,25 @@ export default function OrdersPage() {
   const [recoveryContact, setRecoveryContact] = useState("");
   const [otp, setOtp] = useState("");
   const [recoveryMessage, setRecoveryMessage] = useState("");
+  const [otpExpiresAt, setOtpExpiresAt] = useState<number | null>(null);
+  const [otpRemaining, setOtpRemaining] = useState(0);
   const [recoveryLoading, setRecoveryLoading] = useState(false);
   const [recoveredOrderCodes, setRecoveredOrderCodes] = useState<string[]>([]);
+
+  useEffect(() => {
+  if (recoveryStep !== "otp" || otpExpiresAt === null) return;
+
+  const interval = window.setInterval(() => {
+    const remaining = Math.max(
+      0,
+      Math.ceil((otpExpiresAt - Date.now()) / 1000)
+    );
+
+    setOtpRemaining(remaining);
+  }, 1000);
+
+  return () => window.clearInterval(interval);
+}, [recoveryStep, otpExpiresAt]);
 
   // Membaca riwayat dari Local Storage saat halaman dibuka.
   useEffect(() => {
@@ -285,6 +302,8 @@ export default function OrdersPage() {
     setRecoveryContact(email);
     setRecoveryStep("otp");
     setRecoveryMessage(result.message);
+    setOtpExpiresAt(Date.now() + 5 * 60 * 1000);
+    setOtpRemaining(300);
   } catch (err) {
     setRecoveryMessage(
       err instanceof Error ? err.message : "Terjadi kesalahan."
@@ -815,7 +834,24 @@ async function handleVerifyOTP() {
                   Masukkan kode verifikasi 6 digit.
                   Kode verifikasi telah diminta melalui email kamu. Masukkan kode 6 digit yang diterima. Kode berlaku selama 5 menit.
                 </p>
+                                <div className="mb-5 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-4 text-center">
+                  <p className="mb-1 text-xs text-slate-400">
+                    Sisa waktu kode OTP
+                  </p>
 
+                  <p className={`text-3xl font-bold tabular-nums ${
+                    otpRemaining <= 60 ? "text-red-400" : "text-cyan-400"
+                  }`}>
+                    {String(Math.floor(otpRemaining / 60)).padStart(2, "0")}:
+                    {String(otpRemaining % 60).padStart(2, "0")}
+                  </p>
+
+                  <p className="mt-1 text-xs text-slate-500">
+                    {otpRemaining > 0
+                      ? "Kode OTP akan kedaluwarsa setelah waktu habis."
+                      : "Kode OTP telah kedaluwarsa. Silakan minta kode baru."}
+                  </p>
+                </div>
                 <label className="mb-2 block text-sm font-semibold">
                   Kode OTP
                 </label>
