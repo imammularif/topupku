@@ -1,8 +1,8 @@
-
+﻿
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
-// Membuat pesanan baru
+// Membuat pesanan dan transaksi pembayaran Midtrans
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -13,12 +13,12 @@ export async function POST(request: Request) {
       zoneId,
       product,
       price,
-      paymentMethod,
       customerName,
       email,
       phone,
     } = body;
 
+    // Validasi tipe data
     if (
       typeof customerName !== "string" ||
       typeof email !== "string" ||
@@ -26,7 +26,6 @@ export async function POST(request: Request) {
       typeof game !== "string" ||
       typeof userId !== "string" ||
       typeof product !== "string" ||
-      typeof paymentMethod !== "string" ||
       !Number.isSafeInteger(price) ||
       price <= 0
     ) {
@@ -40,6 +39,7 @@ export async function POST(request: Request) {
     const cleanEmail = email.trim().toLowerCase();
     const cleanPhone = phone.replace(/[\s-]/g, "");
 
+    // Validasi nama
     if (cleanName.length < 3 || cleanName.length > 100) {
       return NextResponse.json(
         { message: "Nama pemesan harus 3-100 karakter." },
@@ -47,6 +47,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validasi email
     if (
       cleanEmail.length > 254 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)
@@ -57,6 +58,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validasi nomor HP
     if (!/^(08\d{8,12}|\+628\d{8,11}|628\d{8,11})$/.test(cleanPhone)) {
       return NextResponse.json(
         { message: "Format nomor HP tidak valid." },
@@ -64,6 +66,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validasi informasi game
     if (
       !game.trim() ||
       game.length > 100 ||
@@ -77,6 +80,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // Validasi Zone ID
     if (
       zoneId !== null &&
       zoneId !== undefined &&
@@ -88,20 +92,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const allowedMethods = [
-      "QRIS",
-      "E-Wallet",
-      "Virtual Account",
-      "Transfer Bank",
-    ];
-
-    if (!allowedMethods.includes(paymentMethod)) {
-      return NextResponse.json(
-        { message: "Metode pembayaran tidak valid." },
-        { status: 400 }
-      );
-    }
-
+    // Katalog harga di server
     const catalog: Record<string, number> = {
       "86 Diamonds": 20000,
       "172 Diamonds": 39000,
@@ -116,9 +107,25 @@ export async function POST(request: Request) {
       );
     }
 
+    // Periksa konfigurasi Midtrans
+    const serverKey = process.env.MIDTRANS_SERVER_KEY;
+    const isProduction =
+      process.env.MIDTRANS_IS_PRODUCTION === "true";
+
+    if (!serverKey) {
+      console.error("Midtrans Server Key belum dikonfigurasi.");
+
+      return NextResponse.json(
+        { message: "Konfigurasi pembayaran belum tersedia." },
+        { status: 500 }
+      );
+    }
+
+    // Buat nomor pesanan
     const orderCode = `TOPUP-${Date.now()}`;
 
-    const { data, error } = await supabaseAdmin
+    // Simpan pesanan ke Supabase
+    const { error: insertError } = await supabaseAdmin
       .from("orders")
       .insert({
         order_code: orderCode,
@@ -130,14 +137,11 @@ export async function POST(request: Request) {
         zone_id: zoneId?.trim() || null,
         product,
         price,
-        payment_method: paymentMethod,
         status: "pending",
-      })
-      .select()
-      .single();
+      });
 
-    if (error) {
-      console.error("Supabase error:", error);
+    if (insertError) {
+      console.error("Supabase error:", insertError);
 
       return NextResponse.json(
         { message: "Gagal menyimpan pesanan." },
@@ -145,10 +149,75 @@ export async function POST(request: Request) {
       );
     }
 
+    // Tentukan endpoint Midtrans
+    const midtransUrl = isProduction
+      ? "https://app.midtrans.com/snap/v1/transactions"
+      : "https://app.sandbox.midtrans.com/snap/v1/transactions";
+
+    // Buat autentikasi Basic menggunakan Server Key
+    const authorization = Buffer.from(`${serverKey}:`).toString(
+      "base64"
+    );
+
+    // Buat transaksi Snap
+    const midtransResponse = await fetch(midtransUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Basic ${authorization}`,
+      },
+      body: JSON.stringify({
+        transaction_details: {
+          order_id: orderCode,
+          gross_amount: price,
+        },
+        customer_details: {
+          first_name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+        },
+        item_details: [
+          {
+            id: product,
+            price,
+            quantity: 1,
+            name: product,
+          },
+        ],
+      }),
+      cache: "no-store",
+    });
+
+    const midtransResult = await midtransResponse.json();
+
+    // Periksa hasil pembuatan transaksi
+    if (
+      !midtransResponse.ok ||
+      typeof midtransResult.redirect_url !== "string"
+    ) {
+      console.error("Midtrans transaction error:", midtransResult);
+
+      return NextResponse.json(
+        {
+          message:
+            "Pesanan tersimpan, tetapi transaksi pembayaran gagal dibuat. Silakan coba kembali atau hubungi admin.",
+          orderCode,
+        },
+        { status: 502 }
+      );
+    }
+
+    // Kirim URL pembayaran ke halaman checkout
     return NextResponse.json(
       {
-        message: "Pesanan berhasil disimpan.",
-        order: data,
+        message: "Pesanan berhasil dibuat. Silakan lanjutkan pembayaran.",
+        order: {
+          order_code: orderCode,
+          product,
+          price,
+          status: "pending",
+        },
+        paymentUrl: midtransResult.redirect_url,
       },
       { status: 201 }
     );
@@ -167,14 +236,17 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const orderCode = searchParams.get("orderCode")?.trim().toUpperCase();
+    const orderCode = searchParams
+      .get("orderCode")
+      ?.trim()
+      .toUpperCase();
+
     const userId = searchParams.get("userId")?.trim();
     const zoneId = searchParams.get("zoneId")?.trim();
 
-    // Data yang boleh ditampilkan ke publik.
-    // Email, nomor HP, dan nama pelanggan tidak disertakan.
+    // Data yang boleh ditampilkan ke publik
     const safeFields =
-    "order_code, customer_name, game, user_id, zone_id, product, price, payment_method, status, created_at";
+      "order_code, customer_name, game, user_id, zone_id, product, price, payment_method, status, created_at";
 
     // Pencarian berdasarkan nomor pesanan
     if (orderCode) {
@@ -224,10 +296,7 @@ export async function GET(request: Request) {
       );
     }
 
-    if (
-      userId.length > 100 ||
-      zoneId.length > 50
-    ) {
+    if (userId.length > 100 || zoneId.length > 50) {
       return NextResponse.json(
         { message: "User ID atau Zone ID tidak valid." },
         { status: 400 }
@@ -253,7 +322,10 @@ export async function GET(request: Request) {
 
     if (!data || data.length === 0) {
       return NextResponse.json(
-        { message: "Belum ada pesanan untuk kombinasi Game ID tersebut." },
+        {
+          message:
+            "Belum ada pesanan untuk kombinasi Game ID tersebut.",
+        },
         { status: 404 }
       );
     }
