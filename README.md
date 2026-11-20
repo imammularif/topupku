@@ -4,31 +4,48 @@
 
 > **Development Notice**
 >
-> TopUpKu is temporarily on hold as of November 2026.
+> TopUpKu has been temporarily put on hold as of November 2026.
 >
-> Development activities are currently paused while I prioritize my career and focus on securing stable, long-term employment with opportunities for contract extension and professional growth, rather than short-term employment.
+> Development is currently paused while I prioritize my career and focus on securing stable, long-term employment with opportunities for professional growth.
 >
-> TopUpKu is an independent personal project developed gradually by its author. Future improvements will be carried out incrementally, step by step, as time and resources become available.
+> TopUpKu is an independent personal project that I have developed gradually. Further improvements will resume step by step when time and resources allow.
 >
-> The repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, OTP-based order recovery, and Midtrans Snap Sandbox checkout integration.
+> This repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, email-based OTP recovery, and Midtrans Snap Sandbox checkout.
 >
-> Please note that TopUpKu remains an independent website prototype and is not currently operating as a commercial game top-up service.
+> Please note that TopUpKu remains a personal website prototype. It is not currently operating as a commercial game top-up service.
 >
 > **Thank You**
 >
-> Thank you for taking the time to visit and explore TopUpKu. I sincerely appreciate your interest, support, and understanding during this temporary development pause.
+> Thank you for taking the time to explore TopUpKu. I sincerely appreciate your interest, support, and understanding during this temporary development pause.
 >
-> Although development is currently on hold, I look forward to improving TopUpKu gradually when circumstances allow. Thank you for being part of this journey.
+> I look forward to continuing this project and improving it when circumstances allow.
 
-A game top-up website prototype built with **Next.js, TypeScript, Supabase, Resend, and Midtrans**.
+---
 
-TopUpKu was created to provide a simple and user-friendly platform for browsing game products, placing top-up orders, initiating test payments, and tracking order history.
+## About the Project
 
-**Latest Development Status:** The prototype includes order management, Supabase database integration, email-based order recovery, and Midtrans Snap Sandbox checkout integration. Full payment confirmation, webhook processing, and automated game top-up fulfillment remain under development.
+TopUpKu is a game top-up website prototype built with **Next.js, TypeScript, Supabase, Resend, and Midtrans**.
+
+The project aims to provide a simple and user-friendly platform where users can browse game products, place top-up orders, initiate payments, and track their order history.
+
+### Development Status
+
+The current prototype includes:
+
+- Game catalog and product selection.
+- Checkout and order creation.
+- Supabase database integration.
+- Order history and lookup.
+- Email-based order recovery with OTP verification.
+- Midtrans Snap Sandbox checkout integration.
+
+Full payment confirmation, webhook processing, and automated game top-up fulfillment are still under development.
 
 ---
 
 ## Screenshots
+
+The following screenshots illustrate the application's interface and user journey.
 
 ### 1. Homepage
 
@@ -42,13 +59,13 @@ TopUpKu was created to provide a simple and user-friendly platform for browsing 
 
 ![How to Use TopUpKu](docs/screenshots/howto.png)
 
-### 4. Checkout Page
+### 4. Checkout
 
 ![Checkout Page](docs/screenshots/checkout.png)
 
 ### 5. Payment Gateway — Midtrans Sandbox
 
-TopUpKu integrates **Midtrans Snap** in Sandbox mode to provide a hosted payment checkout experience.
+TopUpKu uses Midtrans Snap in Sandbox mode to provide a hosted payment checkout experience.
 
 ![Midtrans Payment Page](docs/screenshots/payment1.png)
 
@@ -56,19 +73,17 @@ TopUpKu integrates **Midtrans Snap** in Sandbox mode to provide a hosted payment
 
 ![Midtrans Payment Page 3](docs/screenshots/payment13.png)
 
-The payment flow allows customers to continue from the TopUpKu checkout page to the Midtrans hosted payment page.
-
-Supported payment options displayed by Midtrans depend on the merchant account configuration.
+The checkout process redirects users from TopUpKu to the Midtrans hosted payment page, where available payment methods can be selected.
 
 Current integration includes:
 
-- Midtrans Snap transaction creation through a backend API.
-- Automatic redirect to the Midtrans payment page.
+- Server-side Snap transaction creation.
+- Automatic redirect to the hosted payment page.
 - Sandbox environment configuration.
-- Payment method selection on the Midtrans hosted checkout.
-- QRIS and other payment options when available in the Sandbox account.
+- Payment method selection through Midtrans.
+- QRIS and other payment options when enabled in the merchant account.
 
-**Note:** The checkout redirect and payment options have been tested. Full end-to-end payment confirmation, webhook processing, and automatic order status synchronization are still under development. Sandbox testing does not represent real customer payments.
+**Note:** Checkout redirection and payment options have been tested. Full end-to-end payment confirmation, webhook processing, and automatic order status synchronization are not yet implemented.
 
 ### 6. Order History
 
@@ -90,7 +105,7 @@ Users can review previous searches, repeat a search, and manage their local sear
 
 ![Forgot Order Number](docs/screenshots/forgot-order-number.png)
 
-An order number recovery feature that allows users to recover previous order numbers using email verification.
+Users can recover previous order numbers through an email-based verification process.
 
 ### 10. Email Recovery
 
@@ -100,7 +115,7 @@ An order number recovery feature that allows users to recover previous order num
 
 Users can request an order recovery verification code using their registered email address.
 
-The backend checks whether the email is associated with existing order records before processing the recovery request.
+The backend checks whether the email address is associated with existing order records before processing the recovery request.
 
 ### 11. OTP Verification
 
@@ -112,13 +127,15 @@ The backend checks whether the email is associated with existing order records b
 
 ![OTP Verification](docs/screenshots/otp-verification4.png)
 
-An email-based OTP verification process integrated with Resend.
+An email-based OTP verification system integrated with Resend.
+
+Key features:
 
 - Six-digit verification code.
-- OTP expiration after five minutes.
-- Email-based verification through backend API routes.
-- OTP values are hashed before being stored in Supabase.
-- Verification attempts are limited to prevent repeated guessing.
+- Five-minute OTP expiration.
+- Backend-based email verification.
+- Hashed OTP storage in Supabase.
+- Verification attempt limits to reduce repeated guessing.
 
 ### 12. Recovery Result
 
@@ -134,51 +151,39 @@ Users can copy their recovered order numbers directly from the result interface.
 
 ### Game Catalog & Checkout
 
-- Browse available games and their product catalogs.
-- Enter game account details (User ID and Zone ID).
-- Select game products and proceed through checkout.
-- Enter customer information.
+- Browse available games and product catalogs.
+- Select game products.
+- Enter game account details, including User ID and Zone ID.
+- Provide customer information.
 - Create orders through a backend API.
-- Continue to Midtrans hosted payment checkout.
+- Continue to the Midtrans hosted payment page.
 
 ### Payment Integration
 
 - Midtrans Snap Sandbox integration.
 - Server-side transaction creation.
-- Automatic redirect to the Midtrans payment page.
+- Automatic redirect to hosted checkout.
 - Payment method selection through Midtrans.
-- QRIS, E-Wallet, Virtual Account, and bank transfer options when enabled and available.
+- Support for available QRIS, E-Wallet, Virtual Account, and bank transfer options, depending on merchant configuration.
 
 ### Order Management
 
-- Create and manage top-up orders.
-- Store order information in Supabase.
+- Create and store top-up orders.
+- Save order information in Supabase.
 - View order history.
 - Look up orders using order numbers or game account details.
-- Manage search history.
+- Manage local search history.
 
 ### Order Recovery
 
-- Access the forgot order number feature.
-- Recover order numbers through email-based OTP verification.
-- Verify OTP codes with expiration handling.
+- Forgot order number feature.
+- Email-based OTP recovery.
+- OTP expiration and verification handling.
 - Display and copy recovered order numbers.
 
 ---
 
-## Planned Product Expansion
-
-TopUpKu is designed to support various digital products, including:
-
-- **Game Currency:** Diamonds, UC, Genesis Crystals, Valorant Points, and other in-game currencies.
-- **Game Membership:** Weekly Pass, Monthly Card, and other game subscriptions.
-- **Game Vouchers:** Digital game vouchers and prepaid codes.
-- **Digital Gift Cards:** Steam Wallet, Google Play, PlayStation Store, and other digital gift cards.
-- **Gaming Subscriptions:** PlayStation Plus, Xbox Game Pass, and other gaming subscriptions.
-
----
-
-## Tech Stack
+## Technology Stack
 
 | Technology | Purpose |
 |---|---|
@@ -187,7 +192,7 @@ TopUpKu is designed to support various digital products, including:
 | TypeScript | Type-safe development |
 | Tailwind CSS | Styling |
 | Supabase | Backend and database integration |
-| PostgreSQL | Relational data storage |
+| PostgreSQL | Relational database |
 | Resend | Transactional email delivery |
 | Midtrans Snap | Payment gateway integration |
 | Git & GitHub | Version control |
@@ -195,6 +200,8 @@ TopUpKu is designed to support various digital products, including:
 ---
 
 ## Supported Games
+
+The current game catalog includes:
 
 - Mobile Legends
 - Free Fire
@@ -205,30 +212,46 @@ TopUpKu is designed to support various digital products, including:
 
 ---
 
+## Planned Product Expansion
+
+TopUpKu is designed with the potential to support additional digital products in the future.
+
+| Product Category | Examples |
+|---|---|
+| Game Currency | Diamonds, UC, Genesis Crystals, Valorant Points |
+| Game Membership | Weekly Pass, Monthly Card, game subscriptions |
+| Game Vouchers | Digital game vouchers and prepaid codes |
+| Digital Gift Cards | Steam Wallet, Google Play, PlayStation Store |
+| Gaming Subscriptions | PlayStation Plus, Xbox Game Pass |
+
+These product categories are planned for future expansion and may require additional supplier integrations.
+
+---
+
 ## Payment Methods
 
-TopUpKu uses Midtrans Snap as its payment gateway in Sandbox mode.
+TopUpKu currently uses **Midtrans Snap in Sandbox mode**.
 
-Payment options available on the hosted checkout may include:
+Available payment options on the hosted checkout may include:
 
 - QRIS
 - E-Wallet
 - Virtual Account
 - Bank Transfer
 
-Payment method availability depends on the Midtrans merchant configuration and enabled payment channels.
+Payment method availability depends on the merchant configuration and enabled payment channels.
 
-**Important:** The current integration is for Sandbox testing only. Production payment processing has not been enabled.
+**Important:** The current integration is intended for testing only. Production payment processing has not been enabled.
 
 ---
 
-## Planned Integrations
+## Integration Plans
 
-### 1. Payment Gateway — Midtrans
+### 1. Midtrans Payment Gateway
 
-The Midtrans Snap integration is currently available in Sandbox mode.
+The Midtrans Snap integration is currently configured for Sandbox testing.
 
-**Implemented:**
+**Implemented**
 
 - Midtrans Sandbox account setup.
 - Server and Client Key configuration.
@@ -237,43 +260,43 @@ The Midtrans Snap integration is currently available in Sandbox mode.
 - Redirect to the Midtrans hosted checkout.
 - Payment method selection through Midtrans.
 
-**Remaining Development:**
+**Remaining Development**
 
 - Complete end-to-end Sandbox payment testing.
 - Implement Midtrans payment notification webhook.
-- Verify payment notification signatures.
+- Verify webhook signatures.
 - Synchronize payment status with Supabase.
-- Store the actual payment method returned by Midtrans.
+- Store the verified payment method.
 - Handle pending, successful, expired, and failed transactions.
 - Perform additional transaction security testing.
 - Prepare production integration.
 
 ### 2. Game Top-Up Provider & Automated Fulfillment
 
-TopUpKu is planned to integrate with external game top-up providers or suppliers through their APIs.
+TopUpKu is planned to integrate with external game top-up providers through their APIs.
 
-The main objective is to enable automatic delivery of purchased game items to customers' game accounts after successful payment verification.
+The objective is to automate the delivery of purchased game items to customers' game accounts after successful payment verification.
 
-**Planned Features:**
+**Planned Capabilities**
 
-- Research and select suitable game top-up providers.
+- Research and evaluate suitable game top-up providers.
 - Integrate external supplier APIs.
 - Develop a Mock Supplier API for initial development and testing.
-- Synchronize game product catalogs, prices, and availability.
-- Automatically submit top-up requests using customer Player ID and Zone ID.
-- Process game item delivery after successful payment verification.
+- Synchronize product catalogs, prices, and availability.
+- Submit top-up requests using customer Player ID and Zone ID.
+- Process game item delivery after verified payment.
 - Synchronize transaction statuses between TopUpKu and the supplier.
 - Handle successful, pending, and failed fulfillment requests.
 - Implement order monitoring and failure handling.
 
-**Planned Automated Transaction Flow:**
+**Planned Automated Transaction Flow**
 
 1. Customer selects a game and product.
 2. Customer enters their Player ID and Zone ID.
-3. Customer completes payment through Midtrans.
+3. Customer proceeds to payment through Midtrans.
 4. TopUpKu verifies the payment notification.
 5. The backend submits the order to the game top-up provider.
-6. The provider processes the item delivery to the customer's game account.
+6. The provider processes delivery to the customer's game account.
 7. TopUpKu receives the provider's transaction response.
 8. The order status is updated and displayed to the customer.
 
@@ -285,13 +308,13 @@ The main objective is to enable automatic delivery of purchased game items to cu
 
 ### Prerequisites
 
-Make sure you have installed:
+Make sure the following tools are installed:
 
 - Node.js
 - npm
 - Git
 
-You also need:
+You will also need:
 
 - A Supabase project.
 - A Resend account for email-based OTP delivery.
@@ -317,7 +340,7 @@ npm install
 
 ### 4. Configure Environment Variables
 
-Create an `.env.local` file in the project root:
+Create an `.env.local` file in the project root directory.
 
 ```env
 SUPABASE_URL=your_supabase_project_url
@@ -335,7 +358,7 @@ MIDTRANS_IS_PRODUCTION=false
 
 Replace the placeholder values with your own credentials.
 
-**Important:**
+**Environment Variable Security**
 
 - `SUPABASE_SECRET_KEY` must only be used in server-side code.
 - `RESEND_API_KEY` must never be exposed in client-side code.
@@ -343,24 +366,26 @@ Replace the placeholder values with your own credentials.
 - `MIDTRANS_SERVER_KEY` must only be used in server-side code.
 - `NEXT_PUBLIC_MIDTRANS_CLIENT_KEY` is intended for public client-side configuration.
 - Set `MIDTRANS_IS_PRODUCTION=false` when using the Sandbox environment.
-- Never commit `.env.local` or expose secret keys in your repository.
+- Never commit `.env.local` or expose secret credentials in the repository.
 
 ### 5. Configure the Database
 
 TopUpKu uses Supabase PostgreSQL.
 
-Create the required database tables:
+The application requires the following database tables:
 
-- `orders` — Stores customer order information and transaction status.
-- `order_recovery_otps` — Stores hashed OTP verification records and expiration information.
+| Table | Purpose |
+|---|---|
+| `orders` | Stores customer order information and transaction status |
+| `order_recovery_otps` | Stores hashed OTP records and expiration information |
 
-The `orders` table includes order information, customer details, product information, payment method, and order status.
+The `orders` table stores customer details, product information, payment method, and order status.
 
-The `payment_method` column must allow `NULL` while the payment method has not yet been confirmed. It can be updated after implementing verified Midtrans payment notifications.
+The `payment_method` column must allow `NULL` while the payment method has not yet been confirmed. It can be updated after verified Midtrans payment notifications are implemented.
 
-Enable Row Level Security (RLS) and configure appropriate permissions for database access.
+Enable Row Level Security (RLS) and configure appropriate database permissions.
 
-The recovery and order APIs use server-side Supabase credentials to access the required records.
+The order and recovery APIs use server-side Supabase credentials to access the required records.
 
 ### 6. Run the Development Server
 
@@ -368,7 +393,7 @@ The recovery and order APIs use server-side Supabase credentials to access the r
 npm run dev
 ```
 
-Open http://localhost:3000 in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### 7. Run Type Checking
 
@@ -376,7 +401,7 @@ Open http://localhost:3000 in your browser.
 npm run typecheck
 ```
 
-### 8. Production Build Verification
+### 8. Verify the Production Build
 
 ```bash
 npm run build
@@ -384,7 +409,7 @@ npm run build
 
 ---
 
-## Database
+## Database Overview
 
 TopUpKu uses Supabase with PostgreSQL to store order and recovery information.
 
@@ -392,19 +417,19 @@ TopUpKu uses Supabase with PostgreSQL to store order and recovery information.
 
 The `orders` table includes:
 
-- Order ID.
-- Order code.
-- Customer name.
-- Customer email.
-- Customer phone.
-- Game.
-- User ID.
-- Zone ID.
-- Product.
-- Price.
-- Payment method.
-- Order status.
-- Creation timestamp.
+- Order ID
+- Order code
+- Customer name
+- Customer email
+- Customer phone
+- Game
+- User ID
+- Zone ID
+- Product
+- Price
+- Payment method
+- Order status
+- Creation timestamp
 
 Payment method information is currently allowed to remain empty until verified payment information is received.
 
@@ -412,15 +437,15 @@ Payment method information is currently allowed to remain empty until verified p
 
 The `order_recovery_otps` table includes:
 
-- Recovery record ID.
-- Customer email.
-- Hashed OTP.
-- Expiration timestamp.
-- Verification attempt counter.
-- OTP consumption timestamp.
-- Creation timestamp.
+- Recovery record ID
+- Customer email
+- Hashed OTP
+- Expiration timestamp
+- Verification attempt counter
+- OTP consumption timestamp
+- Creation timestamp
 
-OTP records are used to support the email-based order recovery process.
+These records support the email-based order recovery process.
 
 ---
 
@@ -465,26 +490,30 @@ topupku/
 
 ### Directory Overview
 
-- **app/** – Next.js App Router pages, layouts, and API endpoints.
-- **components/** – Reusable UI components.
-- **data/** – Centralized game catalog and product data.
-- **lib/** – Shared utilities and backend integration configurations.
-- **public/** – Static assets, including game images.
-- **docs/** – Project documentation and application screenshots.
+| Directory | Description |
+|---|---|
+| `app/` | Next.js pages, layouts, and API routes |
+| `components/` | Reusable UI components |
+| `data/` | Game catalog and product data |
+| `lib/` | Shared utilities and backend integrations |
+| `public/` | Static assets and game images |
+| `docs/` | Project documentation and screenshots |
 
 ---
 
 ## Current Limitations
 
-TopUpKu is currently a functional prototype for learning and portfolio purposes.
+TopUpKu is currently a functional prototype intended for learning and portfolio purposes.
 
-- Midtrans integration is currently configured for Sandbox testing only.
-- Full end-to-end payment confirmation has not yet been completed.
+The following limitations remain:
+
+- Midtrans is configured for Sandbox testing only.
+- Full end-to-end payment confirmation has not been completed.
 - Payment webhooks and automatic payment status synchronization are not yet implemented.
-- Production payment processing is not available.
+- Production payment processing is unavailable.
 - Game top-up fulfillment is not connected to an external supplier.
-- Email-based OTP recovery requires a verified Resend domain for customer-facing delivery.
-- WhatsApp recovery is not yet available.
+- Email-based OTP recovery requires a verified Resend sending domain for customer-facing delivery.
+- WhatsApp-based recovery is not available.
 - Search history is stored locally in the browser and is not synchronized across devices.
 - Public order lookup endpoints are intended for prototype testing only.
 
@@ -493,6 +522,8 @@ Additional authentication, authorization, API rate limiting, transaction verific
 ---
 
 ## Roadmap
+
+The roadmap below separates completed development from planned improvements.
 
 ### Completed
 
@@ -506,7 +537,7 @@ Additional authentication, authorization, API rate limiting, transaction verific
 - [x] Order lookup by order number or game account details.
 - [x] Search history management.
 
-**Backend & Integration**
+**Backend & Email Integration**
 
 - [x] Supabase database integration.
 - [x] Email-based OTP recovery request API.
@@ -515,22 +546,21 @@ Additional authentication, authorization, API rate limiting, transaction verific
 - [x] Five-minute OTP expiration enforcement on the backend.
 - [x] Resend email service integration.
 - [x] Custom HTML email template for OTP recovery.
-- [x] TOPUPKU email branding, subject, content, and visual design.
+- [x] TopUpKu email branding and visual design.
 - [x] Email OTP delivery testing.
 - [x] Recovered order number display and copy functionality.
 - [x] OTP request cooldown handling.
-- [x] Real-time five-minute OTP countdown timer.
-- [x] Dynamic remaining OTP validity display.
-- [x] OTP countdown warning when less than one minute remains.
-- [x] OTP expiration message when countdown reaches zero.
+- [x] Real-time five-minute OTP countdown.
+- [x] Remaining OTP validity display.
+- [x] OTP expiration warning and status message.
 
 **Payment Integration — Midtrans Sandbox**
 
 - [x] Midtrans merchant account registration.
-- [x] Sandbox credentials configuration.
+- [x] Sandbox credential configuration.
 - [x] Midtrans Snap transaction creation API.
 - [x] Order creation integrated with payment checkout.
-- [x] Redirect to Midtrans hosted payment page.
+- [x] Redirect to the Midtrans hosted payment page.
 - [x] Payment method selection through Midtrans.
 - [x] Initial Sandbox checkout testing.
 
@@ -538,19 +568,19 @@ Additional authentication, authorization, API rate limiting, transaction verific
 
 - [x] Modular homepage architecture.
 - [x] Reusable UI components:
-  - [x] Navbar.
-  - [x] HeroSection.
-  - [x] GameSection.
-  - [x] GameCard.
-  - [x] OrderModal.
+  - [x] Navbar
+  - [x] HeroSection
+  - [x] GameSection
+  - [x] GameCard
+  - [x] OrderModal
 - [x] Centralized game and product data management.
 - [x] GitHub repository and version control.
 - [x] Next.js 16.4.6 upgrade.
 - [x] TypeScript type checking.
 - [x] Production build verification.
-- [x] GitHub synchronization and updates to the main branch.
+- [x] GitHub synchronization and main branch updates.
 
-### Future Development Plans
+### Future Development
 
 **Payment Integration**
 
@@ -563,24 +593,24 @@ Additional authentication, authorization, API rate limiting, transaction verific
 - [ ] Handle successful, pending, expired, and failed payments.
 - [ ] Prepare production integration.
 
-**Email & OTP Enhancement**
+**Email & OTP Improvements**
 
-- [ ] Add a clear OTP resend interface after the cooldown period.
+- [ ] Add an OTP resend interface after the cooldown period.
 - [ ] Improve email delivery monitoring and error handling.
 - [ ] Verify a custom sending domain for Resend.
 - [ ] Perform additional OTP expiration and resend testing.
 
-**User Experience Improvements**
+**User Experience**
 
-- [ ] Add copy order number notification.
+- [ ] Add copy order number notifications.
 - [ ] Improve checkout form validation.
 - [ ] Add loading states for API requests.
 - [ ] Prevent duplicate submissions during order processing.
-- [ ] Improve responsive design for mobile devices.
+- [ ] Improve mobile responsiveness.
 
 **Code Quality & Security**
 
-- [ ] Further code refactoring and service-layer separation.
+- [ ] Refactor code and introduce service-layer separation.
 - [ ] Implement reusable order history and recovery hooks.
 - [ ] Improve order code generation.
 - [ ] Strengthen API security and data protection.
@@ -591,7 +621,7 @@ Additional authentication, authorization, API rate limiting, transaction verific
 **Game Provider & Automated Fulfillment**
 
 - [ ] Research and evaluate suitable game top-up providers.
-- [ ] Develop a Mock Supplier API for development and testing.
+- [ ] Develop a Mock Supplier API for testing.
 - [ ] Integrate external game top-up provider APIs.
 - [ ] Synchronize product catalogs, prices, and availability.
 - [ ] Implement automated game top-up order submission.
@@ -599,12 +629,12 @@ Additional authentication, authorization, API rate limiting, transaction verific
 - [ ] Synchronize provider transaction statuses with TopUpKu.
 - [ ] Implement failed-order handling and transaction monitoring.
 
-**Product Catalog Expansion**
+**Product Expansion**
 
 - [ ] Expand the catalog beyond game diamonds and currencies.
 - [ ] Add game memberships and subscriptions.
 - [ ] Add digital game vouchers and gift cards.
-- [ ] Support more games and digital products.
+- [ ] Support additional games and digital products.
 
 **Integration & Deployment**
 
@@ -618,18 +648,18 @@ Additional authentication, authorization, API rate limiting, transaction verific
 
 ## Customer Support
 
-TopUpKu provides an email contact channel for users who need assistance or have questions regarding their orders and transactions.
+TopUpKu provides an email contact channel for questions or assistance regarding orders and transactions.
 
-Email: your-support-email@example.com
+**Email:** your-support-email@example.com
 
-When contacting support, users are encouraged to include:
+When contacting support, please include:
 
-- Order number (if available).
+- Order number, if available.
 - Game name and product.
 - Description of the issue or inquiry.
 - Relevant transaction details.
 
-**Note:** Never share passwords, OTP verification codes, or sensitive payment information through email.
+**Security Reminder:** Never share passwords, OTP verification codes, or sensitive payment information through email.
 
 ---
 
@@ -637,11 +667,9 @@ When contacting support, users are encouraged to include:
 
 TopUpKu is an independent learning and portfolio project.
 
-The current payment integration uses the Midtrans Sandbox environment and is not intended for real customer transactions.
-
-Game top-up fulfillment is not yet connected to an external supplier.
-
-This project is not affiliated with or officially endorsed by the game publishers mentioned above.
+- The current payment integration uses the Midtrans Sandbox environment and is not intended for real customer transactions.
+- Game top-up fulfillment is not yet connected to an external supplier.
+- This project is not affiliated with or officially endorsed by the game publishers mentioned above.
 
 ---
 
@@ -649,8 +677,6 @@ This project is not affiliated with or officially endorsed by the game publisher
 
 **Imammul Arif**
 
-GitHub: [@imammularif](https://github.com/imammularif)
-
-Project Repository: [TopUpKu](https://github.com/imammularif/topupku)
-
-Portfolio: [imammularif.github.io/portfolio-V2.0](https://imammularif.github.io/portfolio-V2.0)
+- **GitHub:** [@imammularif](https://github.com/imammularif)
+- **Project Repository:** [TopUpKu](https://github.com/imammularif/topupku)
+- **Portfolio:** [imammularif.github.io/portfolio-V2.0](https://imammularif.github.io/portfolio-V2.0)
