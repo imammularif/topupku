@@ -8,7 +8,7 @@
 >
 > Development activities are currently paused while I prioritize my career and focus on securing stable, long-term employment with opportunities for contract extension and professional growth, rather than short-term employment.
 >
-> TopUpKu is an independent personal project developed gradually by its author. Future improvements and development will be carried out little by little, step by step, as time and resources become available.
+> TopUpKu is an independent personal project developed gradually by its author. Future improvements will be carried out incrementally, step by step, as time and resources become available.
 >
 > The repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, OTP-based order recovery, and Midtrans Snap Sandbox checkout integration.
 >
@@ -24,7 +24,7 @@ A game top-up website prototype built with **Next.js, TypeScript, Supabase, Rese
 
 TopUpKu was created to provide a simple and user-friendly platform for browsing game products, placing top-up orders, initiating test payments, and tracking order history.
 
-**Latest Development Status:** The prototype includes order management, Supabase database integration, email-based order recovery, and Midtrans Snap Sandbox checkout integration. Full payment confirmation and webhook integration are still under development.
+**Latest Development Status:** The prototype includes order management, Supabase database integration, email-based order recovery, and Midtrans Snap Sandbox checkout integration. Full payment confirmation, webhook processing, and automated game top-up fulfillment remain under development.
 
 ---
 
@@ -220,11 +220,11 @@ Payment method availability depends on the Midtrans merchant configuration and e
 
 ## Planned Integrations
 
-### Payment Gateway — Midtrans
+### 1. Payment Gateway — Midtrans
 
 The Midtrans Snap integration is currently available in Sandbox mode.
 
-Implemented:
+**Implemented:**
 
 - Midtrans Sandbox account setup.
 - Server and Client Key configuration.
@@ -233,7 +233,7 @@ Implemented:
 - Redirect to the Midtrans hosted checkout.
 - Payment method selection through Midtrans.
 
-Remaining development:
+**Remaining Development:**
 
 - Complete end-to-end Sandbox payment testing.
 - Implement Midtrans payment notification webhook.
@@ -244,19 +244,36 @@ Remaining development:
 - Perform additional transaction security testing.
 - Prepare production integration.
 
-### Game Top-Up Provider
+### 2. Game Top-Up Provider & Automated Fulfillment
 
-TopUpKu is planned to integrate with external game top-up suppliers through API services.
+TopUpKu is planned to integrate with external game top-up providers or suppliers through their APIs.
 
-Planned features:
+The main objective is to enable automatic delivery of purchased game items to customers' game accounts after successful payment verification.
 
-- Supplier API integration.
-- Product and price synchronization.
-- Automated order fulfillment.
-- Transaction status updates.
-- Mock Supplier API for development and testing.
+**Planned Features:**
 
-**Note:** Automated game top-up fulfillment is not yet connected to an external supplier.
+- Research and select suitable game top-up providers.
+- Integrate external supplier APIs.
+- Develop a Mock Supplier API for initial development and testing.
+- Synchronize game product catalogs, prices, and availability.
+- Automatically submit top-up requests using customer Player ID and Zone ID.
+- Process game item delivery after successful payment verification.
+- Synchronize transaction statuses between TopUpKu and the supplier.
+- Handle successful, pending, and failed fulfillment requests.
+- Implement order monitoring and failure handling.
+
+**Planned Automated Transaction Flow:**
+
+1. Customer selects a game and product.
+2. Customer enters their Player ID and Zone ID.
+3. Customer completes payment through Midtrans.
+4. TopUpKu verifies the payment notification.
+5. The backend submits the order to the game top-up provider.
+6. The provider processes the item delivery to the customer's game account.
+7. TopUpKu receives the provider's transaction response.
+8. The order status is updated and displayed to the customer.
+
+**Note:** Automated game item delivery is a future development goal. TopUpKu is not yet connected to an external game top-up supplier.
 
 ---
 
@@ -567,13 +584,16 @@ Additional authentication, authorization, API rate limiting, transaction verific
 - [ ] Implement customer authentication.
 - [ ] Improve order lookup security and verification.
 
-**Supplier Integration**
+**Game Provider & Automated Fulfillment**
 
-- [ ] Research suitable game top-up providers.
-- [ ] Implement Mock Supplier API.
-- [ ] Integrate supplier API.
-- [ ] Implement automated order fulfillment.
-- [ ] Implement transaction status synchronization.
+- [ ] Research and evaluate suitable game top-up providers.
+- [ ] Develop a Mock Supplier API for development and testing.
+- [ ] Integrate external game top-up provider APIs.
+- [ ] Synchronize product catalogs, prices, and availability.
+- [ ] Implement automated game top-up order submission.
+- [ ] Implement automatic item delivery using Player ID and Zone ID.
+- [ ] Synchronize provider transaction statuses with TopUpKu.
+- [ ] Implement failed-order handling and transaction monitoring.
 
 **Product Catalog Expansion**
 
@@ -586,6 +606,7 @@ Additional authentication, authorization, API rate limiting, transaction verific
 
 - [ ] Complete end-to-end payment testing.
 - [ ] Complete end-to-end email recovery testing.
+- [ ] Complete payment-to-fulfillment integration testing.
 - [ ] Prepare production deployment.
 - [ ] Complete security and transaction testing.
 
