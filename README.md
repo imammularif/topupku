@@ -2,29 +2,29 @@
 
 ![Project Status](https://img.shields.io/badge/Project%20Status-Temporarily%20On%20Hold-yellow?style=for-the-badge)
 
-**Development Status**
-
-TopUpKu is temporarily on hold as of November 2026.
-
-Development activities are temporarily paused as I prioritize my career and focus on securing a stable, long-term employment opportunity with potential for contract extension and career growth, rather than short-term employment.
-
-TopUpKu is an independent personal project developed gradually by its author, step by step, alongside other personal and professional commitments. Future development will continue incrementally as time and resources become available.
-
-The current repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, OTP-based order recovery, and Midtrans Snap Sandbox checkout integration.
-
-TopUpKu remains an independent website prototype and is not currently operating as a commercial game top-up service.
-
-**Thank You**
-
-Thank you for taking the time to visit and explore TopUpKu. I sincerely appreciate your interest, support, and understanding during this temporary development pause.
-
-Although development is currently on hold, I hope to continue improving TopUpKu little by little, one step at a time, when circumstances allow. Thank you for being part of this journey.
+> **Development Notice**
+>
+> TopUpKu is temporarily on hold as of November 2026.
+>
+> Development activities are currently paused while I prioritize my career and focus on securing stable, long-term employment with opportunities for contract extension and professional growth, rather than short-term employment.
+>
+> TopUpKu is an independent personal project developed gradually by its author. Future improvements and development will be carried out little by little, step by step, as time and resources become available.
+>
+> The repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, OTP-based order recovery, and Midtrans Snap Sandbox checkout integration.
+>
+> Please note that TopUpKu remains an independent website prototype and is not currently operating as a commercial game top-up service.
+>
+> **Thank You**
+>
+> Thank you for taking the time to visit and explore TopUpKu. I sincerely appreciate your interest, support, and understanding during this temporary development pause.
+>
+> Although development is currently on hold, I look forward to improving TopUpKu gradually when circumstances allow. Thank you for being part of this journey.
 
 A game top-up website prototype built with **Next.js, TypeScript, Supabase, Resend, and Midtrans**.
 
-TopUpKu was developed to provide a simple and user-friendly platform for browsing game products, placing top-up orders, initiating test payments, and tracking order history.
+TopUpKu was created to provide a simple and user-friendly platform for browsing game products, placing top-up orders, initiating test payments, and tracking order history.
 
-**Latest Development Status:** The prototype includes order management, Supabase database integration, email-based order recovery, and Midtrans Snap Sandbox checkout integration. Full payment confirmation and webhook integration remain under development.
+**Latest Development Status:** The prototype includes order management, Supabase database integration, email-based order recovery, and Midtrans Snap Sandbox checkout integration. Full payment confirmation and webhook integration are still under development.
 
 ---
 
