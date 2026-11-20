@@ -24,9 +24,8 @@ TopUpKu provides a simple and user-friendly platform for browsing game products,
 
 ![Game Selection](docs/screenshots/game-selection.png)
 
-### Order & Checkout Page
+### Checkout Page
 
-![Order Page](docs/screenshots/order.png)
 ![Checkout Page](docs/screenshots/checkout.png)
 
 ### Order History
