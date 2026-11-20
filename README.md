@@ -36,7 +36,11 @@ TopUpKu was created to provide a simple and user-friendly platform for browsing 
 
 ### Game Selection
 
-![Game Selection](docs/screenshots/game-selection.png)
+![TopUpKu Game Selection](docs/screenshots/game-selection.png)
+
+### How to Use
+
+![How to Use TopUpKu](docs/screenshots/howto.png)
 
 ### Checkout Page
 
