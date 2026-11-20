@@ -30,81 +30,23 @@ TopUpKu was created to provide a simple and user-friendly platform for browsing 
 
 ## Screenshots
 
-### Homepage
+### 1. Homepage
 
 ![TopUpKu Homepage](docs/screenshots/homepage.png)
 
-### Game Selection
+### 2. Game Selection
 
 ![TopUpKu Game Selection](docs/screenshots/game-selection.png)
 
-### How to Use
+### 3. How to Use
 
 ![How to Use TopUpKu](docs/screenshots/howto.png)
 
-### Checkout Page
+### 4. Checkout Page
 
 ![Checkout Page](docs/screenshots/checkout.png)
 
-### Order History
-
-![Order History](docs/screenshots/order-history.png)
-
-### Search History
-
-![Search History](docs/screenshots/search-history.png)
-
-![Search History 2](docs/screenshots/search-history2.png)
-
-Users can review previous searches, repeat a search, and manage their local search history.
-
-### Order Details
-
-![Order Details](docs/screenshots/order.png)
-
-### Forgot Order Number
-
-![Forgot Order Number](docs/screenshots/forgot-order-number.png)
-
-An order number recovery feature that allows users to recover previous order numbers using email verification.
-
-### Email Recovery
-
-![Email Recovery](docs/screenshots/order-recovery-email.png)
-
-![Email Recovery 2](docs/screenshots/order-recovery-email2.png)
-
-![OTP Verification](docs/screenshots/otp-verification2.png)
-
-Users can request an order recovery verification code using their registered email address.
-
-The backend checks whether the email is associated with existing order records before processing the recovery request.
-
-### OTP Verification
-
-![OTP Verification](docs/screenshots/otp-verification5.png)
-
-![OTP Verification](docs/screenshots/otp-verification3.png)
-
-![OTP Verification](docs/screenshots/otp-verification4.png)
-
-An email-based OTP verification process integrated with Resend.
-
-- Six-digit verification code.
-- OTP expiration after five minutes.
-- Email-based verification through backend API routes.
-- OTP values are hashed before being stored in Supabase.
-- Verification attempts are limited to prevent repeated guessing.
-
-### Recovery Result
-
-![Recovery Result](docs/screenshots/recovered-order-number.png)
-
-After successful OTP verification, the system retrieves and displays order numbers associated with the verified email address.
-
-Users can copy their recovered order numbers directly from the result interface.
-
-### Payment Gateway — Midtrans Sandbox
+### 5. Payment Gateway — Midtrans Sandbox
 
 TopUpKu integrates **Midtrans Snap** in Sandbox mode to provide a hosted payment checkout experience.
 
@@ -127,6 +69,64 @@ Current integration includes:
 - QRIS and other payment options when available in the Sandbox account.
 
 **Note:** The checkout redirect and payment options have been tested. Full end-to-end payment confirmation, webhook processing, and automatic order status synchronization are still under development. Sandbox testing does not represent real customer payments.
+
+### 6. Order History
+
+![Order History](docs/screenshots/order-history.png)
+
+### 7. Order Details
+
+![Order Details](docs/screenshots/order.png)
+
+### 8. Search History
+
+![Search History](docs/screenshots/search-history.png)
+
+![Search History 2](docs/screenshots/search-history2.png)
+
+Users can review previous searches, repeat a search, and manage their local search history.
+
+### 9. Forgot Order Number
+
+![Forgot Order Number](docs/screenshots/forgot-order-number.png)
+
+An order number recovery feature that allows users to recover previous order numbers using email verification.
+
+### 10. Email Recovery
+
+![Email Recovery](docs/screenshots/order-recovery-email.png)
+
+![Email Recovery 2](docs/screenshots/order-recovery-email2.png)
+
+Users can request an order recovery verification code using their registered email address.
+
+The backend checks whether the email is associated with existing order records before processing the recovery request.
+
+### 11. OTP Verification
+
+![OTP Verification](docs/screenshots/otp-verification2.png)
+
+![OTP Verification](docs/screenshots/otp-verification5.png)
+
+![OTP Verification](docs/screenshots/otp-verification3.png)
+
+![OTP Verification](docs/screenshots/otp-verification4.png)
+
+An email-based OTP verification process integrated with Resend.
+
+- Six-digit verification code.
+- OTP expiration after five minutes.
+- Email-based verification through backend API routes.
+- OTP values are hashed before being stored in Supabase.
+- Verification attempts are limited to prevent repeated guessing.
+
+### 12. Recovery Result
+
+![Recovery Result](docs/screenshots/recovered-order-number.png)
+
+After successful OTP verification, the system retrieves and displays order numbers associated with the verified email address.
+
+Users can copy their recovered order numbers directly from the result interface.
 
 ---
 
