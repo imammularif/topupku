@@ -1,10 +1,16 @@
 # TopUpKu — Game Top-Up Website
 
-![Project Status](https://img.shields.io/badge/Project%20Status-Development-orange?style=for-the-badge)
+![Project Status](https://img.shields.io/badge/Project%20Status-Temporarily%20On%20Hold-yellow?style=for-the-badge)
 
-> **Development Notice**
+> **Development Status**
 >
-> TopUpKu is an independent game top-up website prototype currently under development. Some features are functional in a testing environment, while production payment processing and automated game top-up fulfillment are not yet available.
+> TopUpKu is temporarily on hold as of November 2026.
+>
+> Development activities are paused while I prioritize professional and career commitments. The project will be resumed when time and resources allow.
+>
+> The current repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, OTP-based order recovery, and Midtrans Snap Sandbox checkout integration.
+>
+> This project remains an independent prototype and is not currently operating as a commercial game top-up service.
 
 A game top-up website prototype built with **Next.js, TypeScript, Supabase, Resend, and Midtrans**.
 
