@@ -6,7 +6,7 @@
 >
 > TopUpKu is temporarily on hold as of November 2026.
 >
-> Development activities are paused while I prioritize professional and career commitments. The project may be resumed when time and resources allow.
+> Development activities are temporarily paused as I prioritize my career and focus on securing a stable, long-term employment opportunity with potential for contract extension and career growth, rather than short-term employment.
 >
 > The current repository preserves the latest development progress, including the Next.js application, Supabase integration, order management, OTP-based order recovery, and Midtrans Snap Sandbox checkout integration.
 >
