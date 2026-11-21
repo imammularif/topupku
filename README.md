@@ -6,7 +6,9 @@ A personal game top-up web application built as a full-stack development and lea
 
 **Temporarily On Hold — November 2026**
 
-TOPUPKU is a personal portfolio project. Development is temporarily paused while the developer focuses on career opportunities and professional growth.
+TOPUPKU is a personal portfolio project. Development is temporarily paused as the developer prioritizes securing a stable, long-term employment opportunity, with a sustainable workload and schedule.
+
+The project may resume when professional commitments and available time allow for consistent development. This pause is intended to maintain a practical balance between career stability and personal project development.
 
 The application is not operating commercially. Production deployment, live payment processing, and automated game credit delivery are not yet available.
 
@@ -38,6 +40,8 @@ It demonstrates full-stack development concepts, including authentication, produ
 
 - [ ] Public HTTPS webhook integration testing
 - [ ] End-to-end payment flow verification
+- [ ] Forgot password with email OTP verification
+- [ ] New password and password confirmation form
 - [ ] Automated game credit delivery
 - [ ] Automated testing
 - [ ] Production deployment and monitoring
@@ -320,7 +324,10 @@ A successful build confirms compilation but does not guarantee that all external
 - [ ] Automated testing and security review
 - [ ] Production deployment
 - [ ] Automated top-up fulfillment
-
+- [ ] Forgot password and password reset flow
+- [ ] Email OTP verification for password recovery
+- [ ] New password and confirmation form
+      
 ## Author
 
 **Imammul Arif**
