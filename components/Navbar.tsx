@@ -1,5 +1,6 @@
 
 import Link from "next/link";
+import AuthMenu from "./AuthMenu";
 
 const navigation = [
   { label: "Beranda", href: "/" },
@@ -35,18 +36,15 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/login"
-            className="rounded-lg border border-violet-500/50 px-4 py-2.5 text-sm font-semibold text-violet-300 transition-all hover:border-violet-400 hover:bg-violet-500/10 hover:shadow-[0_0_12px_rgba(139,92,246,0.25)]"
+            href="/orders"
+            className="flex items-center gap-2 rounded-lg border border-violet-500/40 bg-violet-500/10 px-3 py-2.5 text-xs font-semibold text-violet-300 transition hover:border-violet-400 hover:bg-violet-500/20 sm:px-4 sm:text-sm"
           >
-            Login
+            <span>📦</span>
+            <span className="hidden sm:inline">Riwayat Pesanan</span>
+            <span className="sm:hidden">Pesanan</span>
           </Link>
 
-          <Link
-            href="/orders"
-            className="rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition-all hover:bg-violet-500 hover:shadow-[0_0_16px_rgba(139,92,246,0.45)]"
-          >
-            Pesanan Saya
-          </Link>
+          <AuthMenu />
         </div>
       </nav>
 
