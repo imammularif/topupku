@@ -14,7 +14,7 @@ The application is not operating commercially. Production deployment, live payme
 
 TOPUPKU simulates an online game top-up purchasing experience.
 
-The project explores full-stack development through authentication, product selection, order management, database integration, payment gateway integration, and email-based order recovery.
+It demonstrates full-stack development concepts, including authentication, product selection, order management, database integration, payment gateway integration, and email-based order recovery.
 
 ## Features
 
@@ -46,9 +46,9 @@ The project explores full-stack development through authentication, product sele
 
 ### Homepage
 
-![Homepage Before Login](docs/screenshots/homepagebeflog.png)
-
-![Homepage After Login](docs/screenshots/homepageaflog.png)
+| Before Login | After Login |
+|---|---|
+| ![Homepage Before Login](docs/screenshots/homepagebeflog.png) | ![Homepage After Login](docs/screenshots/homepageaflog.png) |
 
 ### Game Catalog and Checkout
 
@@ -60,27 +60,27 @@ The project explores full-stack development through authentication, product sele
 
 ### Payment
 
-![Payment Simulation](docs/screenshots/paymentsimul.png)
-
-![QRIS Payment Simulation](docs/screenshots/paymentsimulqris.png)
+| Payment Simulation | QRIS Simulation |
+|---|---|
+| ![Payment Simulation](docs/screenshots/paymentsimul.png) | ![QRIS Simulation](docs/screenshots/paymentsimulqris.png) |
 
 ### Authentication and Profile
 
-![Login](docs/screenshots/login.png)
+| Login | Registration |
+|---|---|
+| ![Login](docs/screenshots/login.png) | ![Registration](docs/screenshots/register.png) |
 
-![Registration](docs/screenshots/register.png)
-
-![User Profile](docs/screenshots/profil.png)
-
-![Edit Profile](docs/screenshots/editprofil.png)
+| Profile | Edit Profile |
+|---|---|
+| ![Profile](docs/screenshots/profil.png) | ![Edit Profile](docs/screenshots/editprofil.png) |
 
 ![Order History](docs/screenshots/history.png)
 
 ### Additional Pages
 
-![How To](docs/screenshots/howto.png)
-
-![Footer](docs/screenshots/footer.png)
+| How To | Footer |
+|---|---|
+| ![How To](docs/screenshots/howto.png) | ![Footer](docs/screenshots/footer.png) |
 
 ## Technology Stack
 
@@ -99,28 +99,30 @@ The project explores full-stack development through authentication, product sele
 
 ## System Architecture
 
-TOPUPKU uses Next.js for frontend pages and backend API routes. The application connects to Supabase for data and authentication, Midtrans for payment processing, and Resend for email delivery.
-
-### Architecture Diagram
+TOPUPKU uses Next.js for its frontend and backend API routes, connecting to Supabase and external services.
 
 ```mermaid
-flowchart TB
-    U([USER]) --> APP["NEXT.JS APPLICATION"]
+flowchart LR
+    U([User]) --> FE
 
-    APP --> FE["FRONTEND<br/>React UI"]
-    APP --> API["BACKEND<br/>API ROUTES"]
+    subgraph APP["Next.js Application"]
+        FE["Frontend<br/>React UI"]
+        API["Backend<br/>API Routes"]
+        FE --> API
+    end
 
-    API <--> DB[("SUPABASE<br/>PostgreSQL & Auth")]
-    API --> MT["MIDTRANS<br/>Snap Payment"]
+    API <--> DB[("Supabase<br/>PostgreSQL & Auth")]
+    API <--> MT["Midtrans<br/>Snap Payment"]
+    API <--> RS["Resend<br/>Email Service"]
+
     MT -.->|"Payment Notification"| API
-    API --> RS["RESEND<br/>Email Service"]
 ```
 
 ### Main Components
 
 - **Frontend:** Game catalog, authentication, checkout, profile, and order history.
 - **Backend:** Order processing, product validation, payment notifications, and OTP verification.
-- **Supabase:** PostgreSQL database and user authentication.
+- **Supabase:** Database and user authentication.
 - **Midtrans:** Payment gateway integration.
 - **Resend:** Email delivery for order recovery.
 
@@ -129,27 +131,27 @@ flowchart TB
 ### 1. Order and Payment Flow
 
 ```mermaid
-flowchart TB
+flowchart LR
     A["Select Game"] --> B["Select Product"]
     B --> C["Enter Customer Data"]
     C --> D["Checkout"]
     D --> E["Server Validation"]
     E --> F[("Save Order<br/>Supabase")]
-    F --> G["Create Payment<br/>Midtrans Snap"]
-    G --> H["Customer Completes Payment"]
-    H --> I["Midtrans Sends Notification"]
+    F --> G["Midtrans Snap"]
+    G --> H["Customer Payment"]
+    H --> I["Midtrans Notification"]
     I --> J["Webhook Verification"]
     J --> K[("Update Order Status<br/>Supabase")]
 ```
 
-The backend validates the product, price, and transaction information before updating the order status.
+The backend validates the order and payment information before updating the transaction status.
 
-**Verification status:** The webhook implementation has passed TypeScript checking and production build verification. End-to-end notification delivery through a public HTTPS endpoint has not yet been verified.
+**Verification status:** The webhook implementation has passed code-level checks and production build verification. End-to-end notification delivery through a public HTTPS endpoint has not yet been verified.
 
 ### 2. Authentication Flow
 
 ```mermaid
-flowchart TB
+flowchart LR
     A["Register / Login"] --> B["Supabase Auth"]
     B --> C["Authentication Callback"]
     C --> D["Authenticated Session"]
@@ -158,16 +160,16 @@ flowchart TB
     E --> G["Edit Profile"]
 ```
 
-Supabase Auth manages user authentication. Authenticated users can access their profile and order history.
+Supabase Auth manages user authentication, while the application provides profile and order history features.
 
 ### 3. Order Recovery Flow
 
 ```mermaid
-flowchart TB
+flowchart LR
     A["Recovery Request"] --> B["Recovery API"]
     B --> C["Generate OTP"]
     C --> D[("Store OTP<br/>Supabase")]
-    C --> E["Send OTP Email<br/>Resend"]
+    C --> E["Send Email<br/>Resend"]
     E --> F["User Enters OTP"]
     F --> G["Verify OTP"]
     G --> H["Recover Order"]
@@ -187,7 +189,7 @@ The recovery feature uses email OTP verification to help users retrieve their or
 
 ## Database
 
-The application uses Supabase PostgreSQL.
+TOPUPKU uses Supabase PostgreSQL.
 
 Known application tables:
 
@@ -266,14 +268,14 @@ RESEND_FROM_EMAIL=
 ORDER_OTP_SECRET=
 ```
 
-Fill in the values using your own service credentials.
+Use your own credentials from each service.
 
 **Security notes:**
 
 - Never commit `.env.local` to GitHub.
 - Keep server-side secrets private.
 - Never expose Supabase secret keys or Midtrans Server Key in client-side code.
-- Use Midtrans Sandbox credentials during development.
+- Use Sandbox credentials during development.
 
 ### Run Locally
 
@@ -296,11 +298,11 @@ Open [http://localhost:3000](http://localhost:3000).
 
 The full-project ESLint check has reported existing React Hooks and image optimization issues.
 
-A successful build confirms compilation, but does not guarantee that all external integrations work correctly in a deployed environment.
+A successful build confirms compilation but does not guarantee that all external integrations work correctly in a deployed environment.
 
 ## Limitations
 
-- The project is not operating commercially.
+- Not operating as a commercial service.
 - Production payment processing is not enabled.
 - Automated game credit delivery is not implemented.
 - Public webhook integration testing is pending.
