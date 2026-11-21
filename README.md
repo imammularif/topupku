@@ -6,15 +6,15 @@ A personal game top-up web application built as a full-stack development and lea
 
 **Temporarily On Hold — November 2026**
 
-TOPUPKU is maintained as a personal portfolio project. Development is temporarily paused while the developer focuses on career opportunities.
+TOPUPKU is a personal portfolio project. Development is temporarily paused while the developer focuses on career opportunities and professional growth.
 
-The application is not operating commercially. Production deployment, live payment processing, and automated game credit delivery have not been completed.
+The application is not operating commercially. Production deployment, live payment processing, and automated game credit delivery are not yet available.
 
 ## Overview
 
 TOPUPKU simulates an online game top-up purchasing experience.
 
-The project demonstrates full-stack development through user authentication, product selection, order management, database integration, payment gateway integration, and email-based order recovery.
+It demonstrates full-stack development concepts, including authentication, product selection, order management, database integration, payment gateway integration, and email-based order recovery.
 
 ## Features
 
@@ -28,15 +28,16 @@ The project demonstrates full-stack development through user authentication, pro
 - [x] User profile and profile editing
 - [x] Order creation and order history
 - [x] Server-side product and price validation
-- [x] Order recovery through email OTP
+- [x] Order recovery using email OTP
 - [x] Midtrans Snap integration
-- [x] Midtrans notification endpoint and signature verification
-- [x] Order and payment status validation
+- [x] Payment notification endpoint
+- [x] Webhook signature verification implementation
+- [x] Payment status validation
 
 ### Pending
 
-- [ ] End-to-end Midtrans webhook testing through a public HTTPS endpoint
-- [ ] Complete payment flow verification
+- [ ] Public HTTPS webhook integration testing
+- [ ] End-to-end payment flow verification
 - [ ] Automated game credit delivery
 - [ ] Automated testing
 - [ ] Production deployment and monitoring
@@ -49,13 +50,13 @@ The project demonstrates full-stack development through user authentication, pro
 |---|---|
 | ![Homepage Before Login](docs/screenshots/homepagebeflog.png) | ![Homepage After Login](docs/screenshots/homepageaflog.png) |
 
-### Catalog and Checkout
+### Game Catalog and Checkout
 
 ![Game Catalog](docs/screenshots/gamecatalog.png)
 
 ![Order Page](docs/screenshots/order.png)
 
-![Checkout](docs/screenshots/checkout.png)
+![Checkout Page](docs/screenshots/checkout.png)
 
 ### Payment
 
@@ -77,79 +78,104 @@ The project demonstrates full-stack development through user authentication, pro
 
 ### Additional Pages
 
-![How To](docs/screenshots/howto.png)
-
-![Footer](docs/screenshots/footer.png)
+| How To | Footer |
+|---|---|
+| ![How To](docs/screenshots/howto.png) | ![Footer](docs/screenshots/footer.png) |
 
 ## Technology Stack
 
 | Category | Technology |
 |---|---|
 | Framework | Next.js |
-| UI | React |
+| UI Library | React |
 | Language | TypeScript |
 | Styling | Tailwind CSS |
 | Database | Supabase PostgreSQL |
 | Authentication | Supabase Auth |
-| Payment | Midtrans Snap |
-| Email | Resend |
-| Tools | npm, Git, GitHub, VS Code |
+| Payment Gateway | Midtrans Snap |
+| Email Service | Resend |
+| Package Manager | npm |
+| Development Tools | VS Code, Git, GitHub |
 
 ## System Architecture
 
-TOPUPKU uses Next.js for frontend pages and backend API routes.
+TOPUPKU uses Next.js for its frontend and backend API routes, connecting to Supabase and external services.
 
-```text
-                  USER
-                    |
-                    v
-             NEXT.JS APPLICATION
-                    |
-          +---------+---------+
-          |                   |
-          v                   v
-       FRONTEND             BACKEND
-          |                   |
-          v                   v
-     USER INTERFACE       API ROUTES
-                              |
-                +-------------+-------------+
-                |             |             |
-                v             v             v
-             SUPABASE      MIDTRANS       RESEND
-                |             |             |
-                v             v             v
-             DATABASE     PAYMENT         EMAIL
-             AUTH         GATEWAY         DELIVERY
+```mermaid
+flowchart LR
+    U([User]) --> FE
+
+    subgraph APP["Next.js Application"]
+        FE["Frontend<br/>React UI"]
+        API["Backend<br/>API Routes"]
+        FE --> API
+    end
+
+    API <--> DB[("Supabase<br/>PostgreSQL & Auth")]
+    API <--> MT["Midtrans<br/>Snap Payment"]
+    API <--> RS["Resend<br/>Email Service"]
+
+    MT -.->|"Payment Notification"| API
 ```
 
-**Main services:**
+### Main Components
 
-- **Next.js:** Frontend and backend application.
-- **Supabase:** Database and authentication.
-- **Midtrans:** Payment gateway.
-- **Resend:** Email delivery.
+- **Frontend:** Game catalog, authentication, checkout, profile, and order history.
+- **Backend:** Order processing, product validation, payment notifications, and OTP verification.
+- **Supabase:** Database and user authentication.
+- **Midtrans:** Payment gateway integration.
+- **Resend:** Email delivery for order recovery.
 
-## Main Workflows
+## System Workflows
 
-### Authentication
+### 1. Order and Payment Flow
 
-1. Users register or log in.
-2. Supabase Auth manages authentication.
-3. The application handles authentication callbacks.
-4. Authenticated users can access their profile and order history.
+```mermaid
+flowchart LR
+    A["Select Game"] --> B["Select Product"]
+    B --> C["Enter Customer Data"]
+    C --> D["Checkout"]
+    D --> E["Server Validation"]
+    E --> F[("Save Order<br/>Supabase")]
+    F --> G["Midtrans Snap"]
+    G --> H["Customer Payment"]
+    H --> I["Midtrans Notification"]
+    I --> J["Webhook Verification"]
+    J --> K[("Update Order Status<br/>Supabase")]
+```
 
-### Order and Payment
+The backend validates the order and payment information before updating the transaction status.
 
-1. Users select a game and product.
-2. Users enter customer information.
-3. The backend validates the product and price.
-4. The order is stored in Supabase.
-5. Payment is initiated through Midtrans Snap.
-6. Midtrans sends a notification to the application.
-7. The webhook validates the transaction before updating the order status.
+**Verification status:** The webhook implementation has passed code-level checks and production build verification. End-to-end notification delivery through a public HTTPS endpoint has not yet been verified.
 
-**Webhook status:** Implemented and passed code-level checks. End-to-end notification delivery has not yet been verified through a public HTTPS endpoint.
+### 2. Authentication Flow
+
+```mermaid
+flowchart LR
+    A["Register / Login"] --> B["Supabase Auth"]
+    B --> C["Authentication Callback"]
+    C --> D["Authenticated Session"]
+    D --> E["User Profile"]
+    D --> F["Order History"]
+    E --> G["Edit Profile"]
+```
+
+Supabase Auth manages user authentication, while the application provides profile and order history features.
+
+### 3. Order Recovery Flow
+
+```mermaid
+flowchart LR
+    A["Recovery Request"] --> B["Recovery API"]
+    B --> C["Generate OTP"]
+    C --> D[("Store OTP<br/>Supabase")]
+    C --> E["Send Email<br/>Resend"]
+    E --> F["User Enters OTP"]
+    F --> G["Verify OTP"]
+    G --> H["Recover Order"]
+```
+
+The recovery feature uses email OTP verification to help users retrieve their order information.
 
 ## API Endpoints
 
@@ -163,14 +189,16 @@ TOPUPKU uses Next.js for frontend pages and backend API routes.
 
 ## Database
 
-The application uses Supabase PostgreSQL.
+TOPUPKU uses Supabase PostgreSQL.
 
 Known application tables:
 
-- `orders` — order and transaction information.
-- `order_recovery_otps` — OTP data for order recovery.
+| Table | Purpose |
+|---|---|
+| `orders` | Stores order and transaction information |
+| `order_recovery_otps` | Stores order recovery OTP information |
 
-User authentication is managed through Supabase Auth.
+User authentication is managed separately through Supabase Auth.
 
 ## Project Structure
 
@@ -179,12 +207,16 @@ topupku/
 ├── app/
 │   ├── api/
 │   │   ├── midtrans/
+│   │   │   └── notification/
 │   │   └── orders/
+│   │       └── recovery/
 │   ├── auth/
+│   │   └── callback/
 │   ├── checkout/
 │   ├── login/
 │   ├── orders/
 │   ├── profile/
+│   │   └── edit/
 │   └── register/
 ├── components/
 ├── docs/
@@ -238,7 +270,8 @@ ORDER_OTP_SECRET=
 
 Use your own credentials from each service.
 
-**Security:**
+**Security notes:**
+
 - Never commit `.env.local` to GitHub.
 - Keep server-side secrets private.
 - Never expose Supabase secret keys or Midtrans Server Key in client-side code.
@@ -265,15 +298,15 @@ Open [http://localhost:3000](http://localhost:3000).
 
 The full-project ESLint check has reported existing React Hooks and image optimization issues.
 
-A successful build confirms compilation, but does not guarantee that external integrations work correctly in production.
+A successful build confirms compilation but does not guarantee that all external integrations work correctly in a deployed environment.
 
 ## Limitations
 
 - Not operating as a commercial service.
 - Production payment processing is not enabled.
-- Automated top-up fulfillment is not implemented.
+- Automated game credit delivery is not implemented.
 - Public webhook integration testing is pending.
-- Automated testing and production monitoring are not available.
+- Automated testing and production monitoring are not yet available.
 - Further security and deployment work is required before production use.
 
 ## Roadmap
