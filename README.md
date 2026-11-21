@@ -1,93 +1,247 @@
 # TopUpKu — Game Top-Up Website
 
-![Project Status](https://img.shields.io/badge/Status-Development%20Paused-yellow?style=for-the-badge)
+A web-based game top-up platform built with **Next.js, TypeScript, Tailwind CSS, Supabase, and Midtrans Snap**.
 
-TopUpKu is a full-stack game top-up website prototype built with Next.js and TypeScript. It provides a simple interface for browsing game products, creating orders, initiating payments, and recovering order information.
+> **Project Status: Temporarily On Hold**
+>
+> Development is temporarily paused as of November 2026 while I prioritize my professional career and job search. This project remains part of my personal learning journey and technical portfolio. It is not currently operating as a commercial top-up service.
 
-**Development has been temporarily paused since November 2026** while I prioritize my professional career. This project remains an independent learning and portfolio project.
+---
 
-> TopUpKu is not currently operating as a commercial game top-up service.
+## 1. Project Overview
 
-## Features
+**TopUpKu** is a personal web development project designed to explore the development of a game top-up platform.
 
-- **Game Catalog** — Browse available games and product options.
-- **Order Management** — Create orders and store order information.
-- **Checkout** — Collect customer details and initiate payment transactions.
-- **Payment Integration** — Midtrans Snap Sandbox checkout.
-- **Order Tracking** — Search orders by order number or game account details.
-- **Order Recovery** — Recover order numbers through email-based OTP verification.
-- **Search History** — Review and manage previous searches locally.
-- **Responsive Interface** — Dark-themed interface with purple and blue accents.
+The application provides a game catalog, product selection, customer information forms, checkout flow, payment integration, order tracking, and order recovery through email verification.
 
-## Screenshots
+The project focuses on implementing a structured full-stack application, integrating third-party services, and understanding real-world transaction workflows.
 
-The following screenshots show selected parts of the application.
+## 2. Features
 
-| Game Catalog | Order History |
+### Customer Interface
+- Game catalog with category filtering.
+- Game search functionality.
+- Product selection and order modal.
+- Customer information form.
+- Checkout and payment summary.
+- Order tracking and search history.
+- Order recovery through email OTP.
+- Responsive dark gaming interface.
+
+### Backend & Integration
+- Next.js API routes for order management.
+- Server-side product and price validation.
+- Supabase database integration.
+- Midtrans Snap payment integration.
+- Email delivery integration using Resend.
+- OTP-based order recovery workflow.
+
+## 3. Application Screenshots
+
+### Homepage
+
+![Homepage](docs/screenshots/homepage.png)
+
+### Game Catalog
+
+![Game Catalog](docs/screenshots/gamecatalog.png)
+
+### Order Selection
+
+![Order Selection](docs/screenshots/order.png)
+
+### Checkout
+
+![Checkout](docs/screenshots/checkout.png)
+
+### Payment Simulation
+
+![Payment Simulation](docs/screenshots/paymentsimul.png)
+
+### Order History
+
+![Order History](docs/screenshots/history.png)
+
+### Login Interface
+
+![Login](docs/screenshots/login.png)
+
+*Note: Login is currently a frontend prototype. Authentication has not been implemented.*
+
+### How It Works
+
+![How It Works](docs/screenshots/howto.png)
+
+### Footer
+
+![Footer](docs/screenshots/footer.png)
+
+## 4. System Architecture
+
+The application uses the Next.js App Router architecture. The frontend communicates with internal API routes, which handle order processing and recovery operations.
+
+```mermaid
+flowchart TD
+    USER[Customer]
+
+    subgraph FRONTEND[Next.js Frontend]
+        HOME[Homepage and Game Catalog]
+        MODAL[Order Selection Modal]
+        CHECKOUT[Checkout Page]
+        ORDERS[Order Tracking Page]
+        LOGIN[Login Prototype]
+    end
+
+    subgraph BACKEND[Next.js API Routes]
+        ORDER_API[Orders API]
+        RECOVERY_REQ[Recovery Request API]
+        RECOVERY_VERIFY[Recovery Verify API]
+    end
+
+    subgraph SERVICES[External Services]
+        DB[(Supabase PostgreSQL)]
+        MIDTRANS[Midtrans Snap]
+        RESEND[Resend Email Service]
+    end
+
+    USER --> HOME
+    HOME --> MODAL
+    MODAL --> CHECKOUT
+    USER --> ORDERS
+    USER --> LOGIN
+
+    CHECKOUT --> ORDER_API
+    ORDERS --> ORDER_API
+    ORDERS --> RECOVERY_REQ
+    ORDERS --> RECOVERY_VERIFY
+
+    ORDER_API --> DB
+    ORDER_API --> MIDTRANS
+    RECOVERY_REQ --> DB
+    RECOVERY_REQ --> RESEND
+    RECOVERY_VERIFY --> DB
+```
+
+### Architecture Components
+
+| Component | Responsibility |
 |---|---|
-| ![Game Catalog](docs/screenshots/gamecatalog.png) | ![Order History](docs/screenshots/history.png) |
+| Next.js Frontend | User interface and customer interactions |
+| Next.js API Routes | Order processing and recovery endpoints |
+| Supabase | Database storage |
+| PostgreSQL | Relational data management |
+| Midtrans Snap | Payment transaction integration |
+| Resend | Email delivery for order recovery |
 
-| Login Page | Payment Simulation |
-|---|---|
-| ![Login Page](docs/screenshots/login.png) | ![Payment Simulation](docs/screenshots/paymentsimul.png) |
+## 5. Core Workflows
 
-## Technology Stack
+### Order Creation and Payment
+
+```mermaid
+flowchart TD
+    A[Open Homepage]
+    B[Select Game]
+    C[Choose Product]
+    D[Enter Game Account ID]
+    E[Proceed to Checkout]
+    F[Enter Customer Information]
+    G[Submit Order]
+    H[Validate Order on Server]
+    I[Save Order to Supabase]
+    J[Create Midtrans Transaction]
+    K[Redirect to Payment Page]
+
+    A --> B --> C --> D --> E
+    E --> F --> G --> H --> I --> J --> K
+```
+
+### Order Recovery
+
+```mermaid
+flowchart TD
+    A[Open Order Tracking]
+    B[Request Order Recovery]
+    C[Enter Registered Email]
+    D[Request OTP]
+    E[Send OTP Through Resend]
+    F[Enter OTP]
+    G[Verify OTP]
+    H{OTP Valid?}
+    I[Display Recovered Order Code]
+    J[Display Verification Error]
+
+    A --> B --> C --> D --> E --> F --> G --> H
+    H -->|Yes| I
+    H -->|No| J
+```
+
+## 6. API Structure
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/orders` | Create a new order |
+| GET | `/api/orders` | Retrieve and search orders |
+| POST | `/api/orders/recovery/request` | Request order recovery OTP |
+| POST | `/api/orders/recovery/verify` | Verify OTP and recover order information |
+
+## 7. Project Structure
+
+```text
+topupku/
+├── app/
+│   ├── api/
+│   │   └── orders/
+│   │       ├── route.ts
+│   │       └── recovery/
+│   │           ├── request/
+│   │           │   └── route.ts
+│   │           └── verify/
+│   │               └── route.ts
+│   ├── checkout/
+│   │   └── page.tsx
+│   ├── login/
+│   │   └── page.tsx
+│   ├── orders/
+│   │   └── page.tsx
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── GameCard.tsx
+│   ├── GameSection.tsx
+│   ├── HeroSection.tsx
+│   ├── Navbar.tsx
+│   └── OrderModal.tsx
+├── data/
+│   └── games.ts
+├── docs/
+│   └── screenshots/
+├── lib/
+│   └── supabaseAdmin.ts
+├── public/
+│   └── games/
+├── .env.local
+├── package.json
+└── README.md
+```
+
+## 8. Technology Stack
 
 | Technology | Purpose |
 |---|---|
-| Next.js 16 | Full-stack React framework |
+| Next.js | Full-stack React framework |
 | React | User interface |
-| TypeScript | Type safety |
-| Tailwind CSS | Styling |
-| Supabase | Database integration |
+| TypeScript | Type-safe development |
+| Tailwind CSS | Styling and responsive design |
+| Supabase | Backend database service |
 | PostgreSQL | Relational database |
-| Resend | Email delivery for OTP |
-| Midtrans Snap | Payment gateway integration |
+| Midtrans Snap | Payment integration |
+| Resend | Email delivery |
 | Git & GitHub | Version control |
 
-## Application Architecture
+## 9. Supported Games
 
-TopUpKu uses Next.js for both frontend and backend functionality.
-
-```text
-User
- │
- ▼
-Next.js Application
- │
- ├── Game Catalog
- ├── Checkout
- ├── Order Tracking
- └── Order Recovery
-      │
-      ▼
- Next.js API Routes
-      │
-      ├── Supabase PostgreSQL
-      ├── Resend Email Service
-      └── Midtrans Snap
-```
-
-## Current Development Status
-
-| Component | Status |
-|---|---|
-| Game Catalog | Implemented |
-| Checkout Interface | Implemented |
-| Order Creation API | Implemented |
-| Supabase Integration | Implemented |
-| Order History & Lookup | Implemented |
-| Email OTP Recovery | Implemented |
-| Resend Integration | Implemented |
-| Midtrans Snap Sandbox | Implemented |
-| Login & Authentication | Prototype UI |
-| Payment Webhook | Not Implemented |
-| Payment Status Synchronization | Not Implemented |
-| Automated Game Top-Up | Not Implemented |
-
-## Current Game Catalog
-
-The prototype currently includes:
+The current game catalog contains:
 
 - Mobile Legends
 - Free Fire
@@ -96,18 +250,17 @@ The prototype currently includes:
 - Valorant
 - Honor of Kings
 
-The available product catalog is still part of the prototype and does not represent a complete production-ready catalog for every game.
+*Product availability and denomination support are still limited and subject to further development.*
 
-## Getting Started
+## 10. Getting Started
 
 ### Prerequisites
 
 - Node.js
 - npm
-- Git
 - Supabase project
-- Resend account
-- Midtrans account for Sandbox testing
+- Midtrans account for payment testing
+- Resend account for email functionality
 
 ### Installation
 
@@ -129,45 +282,9 @@ Install dependencies:
 npm install
 ```
 
-### Environment Configuration
+Create a `.env.local` file in the project root and configure the required environment variables.
 
-Create an `.env.local` file in the project root:
-
-```env
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_SECRET_KEY=your_supabase_secret_key
-
-RESEND_API_KEY=your_resend_api_key
-RESEND_FROM_EMAIL=your_verified_sender_email
-
-ORDER_OTP_SECRET=your_random_secret
-
-MIDTRANS_SERVER_KEY=your_midtrans_server_key
-NEXT_PUBLIC_MIDTRANS_CLIENT_KEY=your_midtrans_client_key
-MIDTRANS_IS_PRODUCTION=false
-```
-
-Replace the placeholder values with your own credentials.
-
-**Security notes:**
-- Never expose Supabase secret keys, Resend API keys, or Midtrans Server Keys in client-side code.
-- Keep `.env.local` out of version control.
-- Use Midtrans Sandbox credentials for testing.
-
-### Database Setup
-
-TopUpKu uses Supabase PostgreSQL.
-
-The application uses the following database tables:
-
-- `orders` — Stores customer and order information.
-- `order_recovery_otps` — Stores OTP recovery records.
-
-Database schema and permissions must be configured in Supabase before running the application.
-
-### Run Locally
-
-Start the development server:
+Run the development server:
 
 ```bash
 npm run dev
@@ -175,51 +292,80 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Build the application:
+## 11. Environment Variables
 
-```bash
-npm run build
+Configure the following variables in `.env.local`:
+
+```env
+SUPABASE_URL=
+SUPABASE_SECRET_KEY=
+
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+
+ORDER_OTP_SECRET=
+
+MIDTRANS_SERVER_KEY=
+NEXT_PUBLIC_MIDTRANS_CLIENT_KEY=
+MIDTRANS_IS_PRODUCTION=false
 ```
 
-## Known Limitations
+**Important:** Never expose secret keys or commit `.env.local` to a public repository.
 
-TopUpKu is a prototype and is not production-ready.
+Use sandbox credentials when testing Midtrans integration.
 
-- Payment integration currently uses Midtrans Sandbox.
-- Payment notification webhooks are not implemented.
-- Automatic payment status synchronization is not available.
-- Game top-up fulfillment is not connected to a supplier API.
+## 12. Database Overview
+
+The application uses Supabase with PostgreSQL as its database.
+
+The current implementation includes data storage for:
+
+- **orders** — customer orders, game account information, product details, prices, payment information, and order status.
+- **order_recovery_otps** — OTP records used in the order recovery process.
+
+Database schema, access policies, and transaction handling may evolve as development continues.
+
+## 13. Current Limitations
+
+The project is still a work in progress.
+
+Known limitations include:
+
 - Login and authentication are not implemented.
-- WhatsApp-based order recovery is not available.
-- Search history is stored locally in the browser.
-- Additional API security and privacy protections are required before production deployment.
+- Game product catalogs are not yet fully customized for every supported game.
+- Automated order fulfillment is not implemented.
+- Payment webhook status synchronization remains incomplete.
+- Customer support functionality is not yet operational.
+- Additional security and privacy hardening is required before public deployment.
 
-## Future Improvements
+## 14. Future Development
 
-Potential development plans include:
+Potential improvements when development resumes:
 
-- Implement Midtrans payment notification webhooks.
-- Synchronize payment status with Supabase.
-- Improve API security and order validation.
-- Implement user authentication.
-- Integrate external game top-up providers.
-- Automate order fulfillment.
-- Expand the game and digital product catalog.
-- Improve monitoring and error handling.
+- Implement customer authentication.
+- Expand and maintain game-specific product catalogs.
+- Complete Midtrans webhook integration.
+- Implement automated payment status synchronization.
+- Develop order fulfillment workflows.
+- Improve API security and data privacy.
+- Implement customer support functionality.
+- Improve testing, monitoring, and deployment readiness.
 
-## Disclaimer
+## 15. Disclaimer
 
-TopUpKu is an independent learning and portfolio project.
+TopUpKu is an independent personal development project created for educational and portfolio purposes.
 
-- It is not affiliated with or officially endorsed by the game publishers mentioned in this repository.
-- All product names and trademarks belong to their respective owners.
-- The current payment integration is intended for Sandbox testing only.
-- No real game top-up fulfillment is currently provided.
+It is not affiliated with, endorsed by, or officially connected to the game publishers or payment service providers mentioned in this repository.
 
-## Author
+All game names and trademarks belong to their respective owners.
+
+## 16. Author
 
 **Imammul Arif**
 
 - GitHub: [@imammularif](https://github.com/imammularif)
-- Repository: [TopUpKu](https://github.com/imammularif/topupku)
-- Portfolio: [imammularif.github.io/portfolio-V2.0](https://imammularif.github.io/portfolio-V2.0)
+- Portfolio: [Personal Portfolio](https://imammularif.github.io/portfolio-V2.0/)
+
+---
+
+*Built as a personal learning project with Next.js and TypeScript.*
