@@ -1,108 +1,49 @@
 
-"use client";
-
-import { useRouter } from "next/navigation";
-import { games } from "../data/games";
+import Link from "next/link";
 
 export default function HeroSection() {
-  const router = useRouter();
-
   return (
-    <section className="relative overflow-hidden border-b border-slate-800">
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-950/50 via-slate-950 to-purple-950/30" />
+    <section className="relative overflow-hidden border-b border-violet-500/20 bg-[#080B18]">
+      <div className="pointer-events-none absolute -left-32 top-0 h-80 w-80 rounded-full bg-purple-600/15 blur-[100px]" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-blue-600/15 blur-[100px]" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 md:grid-cols-2 md:py-28">
-        <div className="max-w-xl">
-          <p className="mb-6 text-sm font-bold uppercase tracking-[0.2em] text-cyan-400">
+      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
+        <div className="max-w-3xl">
+          <span className="inline-flex rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-2 text-xs font-semibold tracking-wide text-violet-300">
+            DISCOVER YOUR ADVENTURE
+          </span>
+
+          <h1 className="mt-6 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
             Top Up Game Favoritmu
-          </p>
-
-          <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
-            Main Game,
-            <span className="mt-2 block text-cyan-400">
-              Makin Seru!
+            <br />
+            <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+              dengan Mudah dan Cepat.
             </span>
           </h1>
 
-          <p className="mt-7 max-w-lg text-base leading-8 text-slate-400 md:text-lg">
-            Temukan kebutuhan game favoritmu di TopUpKu.
-            Pilih game, tentukan nominal, dan buat pesanan
-            dengan mudah melalui satu platform.
+          <p className="mt-5 max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
+            Temukan game favoritmu, pilih produk yang kamu
+            inginkan, dan nikmati pengalaman pemesanan top up
+            yang praktis bersama TopUpKu.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-3">
-            <a
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
               href="#games"
-              className="rounded-xl bg-cyan-500 px-7 py-3.5 text-sm font-bold text-slate-950 transition hover:bg-cyan-400"
+              className="inline-flex items-center justify-center rounded-lg bg-violet-600 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-violet-500 hover:shadow-[0_0_20px_rgba(139,92,246,0.4)]"
             >
-              Mulai Top Up
-            </a>
+              Jelajahi Game →
+            </Link>
 
-            <button
-              onClick={() => router.push("/orders")}
-              className="rounded-xl border border-slate-700 px-7 py-3.5 text-sm font-semibold transition hover:border-cyan-400 hover:text-cyan-400"
+            <Link
+              href="/orders"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-700 bg-slate-900/50 px-6 py-3 text-sm font-semibold text-slate-200 transition-colors hover:border-blue-500/50 hover:text-blue-300"
             >
               Cek Pesanan
-            </button>
+            </Link>
           </div>
 
-          <div className="mt-12 grid max-w-md grid-cols-3 gap-5 border-t border-slate-800 pt-7">
-            <div>
-              <p className="text-2xl font-extrabold text-cyan-400">6+</p>
-              <p className="mt-2 text-xs leading-5 text-slate-500 sm:text-sm">
-                Pilihan Game
-              </p>
-            </div>
-
-            <div>
-              <p className="text-2xl font-extrabold text-cyan-400">
-                Mudah
-              </p>
-              <p className="mt-2 text-xs leading-5 text-slate-500 sm:text-sm">
-                Proses Pemesanan
-              </p>
-            </div>
-
-            <div>
-              <p className="text-2xl font-extrabold text-cyan-400">
-                24/7
-              </p>
-              <p className="mt-2 text-xs leading-5 text-slate-500 sm:text-sm">
-                Akses Website
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* HERO GAME IMAGES */}
-        <div className="relative hidden md:block">
-          <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-3xl" />
-
-          <div className="relative grid grid-cols-2 gap-4">
-            {games.slice(0, 4).map((game) => (
-              <div
-                key={game.name}
-                className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-900 shadow-2xl"
-              >
-                <div className="relative h-40 overflow-hidden">
-                  <img
-                    src={game.image}
-                    alt={game.name}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-
-                  <span className="absolute bottom-4 left-4 text-sm font-bold tracking-wide">
-                    {game.name}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className="mt-10 h-[2px] w-48 rounded-full bg-gradient-to-r from-violet-500 via-purple-400 to-blue-500 shadow-[0_0_12px_rgba(139,92,246,0.6)]" />
         </div>
       </div>
     </section>
