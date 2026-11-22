@@ -20,12 +20,17 @@ export default function EditProfilePage() {
   const [avatarStyle, setAvatarStyle] =
     useState<AvatarStyle>("default");
 
+  // Avatar TOPUPKU dan avatar Google disimpan terpisah.
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [googleAvatarUrl, setGoogleAvatarUrl] =
+    useState<string | null>(null);
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [avatarError, setAvatarError] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -62,15 +67,23 @@ export default function EditProfilePage() {
       );
 
       setPhone(data?.phone || "");
+
       setAvatarStyle(
         (data?.avatar_style as AvatarStyle) || "default"
       );
+
       setAvatarUrl(data?.avatar_url || null);
+
+      setGoogleAvatarUrl(
+        user.user_metadata?.avatar_url ||
+          user.user_metadata?.picture ||
+          null
+      );
 
       setLoading(false);
     }
 
-    loadProfile();
+    void loadProfile();
 
     return () => {
       active = false;
@@ -98,6 +111,7 @@ export default function EditProfilePage() {
 
     setMessage("");
     setErrorMessage("");
+    setAvatarError(false);
 
     const allowedTypes = [
       "image/jpeg",
@@ -139,6 +153,9 @@ export default function EditProfilePage() {
       }
 
       const user = authData.user;
+
+      // Hanya gunakan avatar TOPUPKU yang sudah tersimpan.
+      // Avatar Google tidak pernah disalin ke profiles.avatar_url.
       let finalAvatarUrl = avatarUrl;
 
       if (selectedFile) {
@@ -187,7 +204,13 @@ export default function EditProfilePage() {
 
       setAvatarUrl(finalAvatarUrl);
       setSelectedFile(null);
+      setAvatarError(false);
       setMessage("Profil berhasil diperbarui.");
+
+      // Memberi tahu Navbar bahwa data profil telah diperbarui.
+      window.dispatchEvent(
+        new Event("topupku:profile-updated")
+      );
 
       router.refresh();
     } catch (error) {
@@ -215,6 +238,9 @@ export default function EditProfilePage() {
     (item) => item.value === avatarStyle
   );
 
+  const displayedAvatar =
+    previewUrl || avatarUrl || googleAvatarUrl;
+
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#080B18] text-slate-300">
@@ -238,73 +264,38 @@ export default function EditProfilePage() {
           ← Kembali ke Profil
         </Link>
 
-        <div className="mt-6 rounded-2xl border border-slate-800 bg-[#101426] p-6 shadow-xl sm:p-8">
-          <h1 className="text-2xl font-bold">
-            Edit Profil
-          </h1>
+        <div className="mt-6 rounded-2xl border border-slate-800 bg-[#101426] p-6 shadow-xl shadow-black/20 sm:p-8">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-white">
+              Edit Profil
+            </h1>
+            <p className="mt-2 text-sm text-slate-400">
+              Perbarui informasi dan foto profil akun TOPUPKU kamu.
+            </p>
+          </div>
 
-          <p className="mt-2 text-sm text-slate-400">
-            Perbarui informasi dan tampilan akun TOPUPKU kamu.
-          </p>
-
-          <form onSubmit={handleSave} className="mt-8 space-y-7">
+          <form onSubmit={handleSave} className="space-y-6">
             <div>
-              <label className="mb-3 block text-sm font-semibold">
-                Foto Profil
-              </label>
+              <h2 className="mb-4 text-sm font-semibold text-slate-200">
+                Foto Profil TOPUPKU
+              </h2>
 
               <div className="flex flex-col items-center gap-4 rounded-xl border border-slate-800 bg-[#080B18] p-6">
-                <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-2 border-violet-500/60 bg-violet-500/10 text-5xl">
-                  {previewUrl || avatarUrl ? (
+                <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-2 border-violet-500/40 bg-violet-500/15 text-5xl">
+                  {displayedAvatar && !avatarError ? (
                     <img
-                      src={previewUrl || avatarUrl || ""}
-                      alt="Preview avatar"
+                      src={displayedAvatar}
+                      alt="Preview foto profil TOPUPKU"
                       className="h-full w-full object-cover"
+                      onError={() => setAvatarError(true)}
                     />
                   ) : (
                     selectedAvatar?.emoji || "👤"
                   )}
                 </div>
 
-                <div className="text-center">
-                  <p className="text-sm font-semibold">
-                    Pilih Avatar
-                  </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    Kamu bisa menggantinya kapan saja.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap justify-center gap-3">
-                  {avatarOptions.map((avatar) => (
-                    <button
-                      key={avatar.value}
-                      type="button"
-                      onClick={() => {
-                        setAvatarStyle(avatar.value);
-                        setAvatarUrl(null);
-                        setSelectedFile(null);
-                      }}
-                      className={`flex flex-col items-center gap-2 rounded-xl border p-3 transition ${
-                        avatarStyle === avatar.value &&
-                        !selectedFile &&
-                        !avatarUrl
-                          ? "border-violet-500 bg-violet-500/15"
-                          : "border-slate-700 bg-[#101426] hover:border-violet-500/50"
-                      }`}
-                    >
-                      <span className="text-3xl">
-                        {avatar.emoji}
-                      </span>
-                      <span className="text-xs text-slate-300">
-                        {avatar.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-
-                <label className="cursor-pointer rounded-lg border border-violet-500/50 bg-violet-500/10 px-5 py-3 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/20">
-                  Upload Foto Sendiri
+                <label className="cursor-pointer rounded-lg border border-violet-500/50 px-5 py-2.5 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/10">
+                  Pilih Foto
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -322,6 +313,41 @@ export default function EditProfilePage() {
                     Foto baru siap disimpan.
                   </p>
                 )}
+
+                <p className="text-center text-xs text-slate-500">
+                  Foto ini hanya mengubah avatar TOPUPKU, bukan foto Google kamu.
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="mb-3 text-sm font-semibold text-slate-200">
+                Pilihan Avatar Default
+              </h2>
+
+              <div className="grid grid-cols-3 gap-3">
+                {avatarOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => {
+                      setAvatarStyle(option.value);
+                      setAvatarError(false);
+                    }}
+                    className={`rounded-xl border p-4 text-center transition ${
+                      avatarStyle === option.value
+                        ? "border-violet-500 bg-violet-500/10"
+                        : "border-slate-700 bg-[#080B18] hover:border-violet-500/50"
+                    }`}
+                  >
+                    <span className="block text-3xl">
+                      {option.emoji}
+                    </span>
+                    <span className="mt-2 block text-xs font-semibold text-slate-300">
+                      {option.label}
+                    </span>
+                  </button>
+                ))}
               </div>
             </div>
 
