@@ -12,7 +12,9 @@
 
 **A Game Top-Up Web Application — Full-Stack Development & Business Concept Project**
 
-TOPUPKU is a personal full-stack web development project that simulates an online game top-up platform. It was built to explore modern web technologies, user experience design, authentication, transaction management, database integration, and payment gateway integration.
+TOPUPKU is a personal full-stack web development project that simulates an online game top-up platform. It explores modern web technologies, user experience design, authentication, transaction management, database integration, and payment gateway integration.
+
+---
 
 ---
 
