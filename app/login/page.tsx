@@ -58,6 +58,43 @@ export default function LoginPage() {
     }
   }
 
+
+  async function handleGoogleLogin() {
+    setLoading(true);
+    setErrorMessage("");
+
+    try {
+      const supabase = createClient();
+
+      const params = new URLSearchParams(window.location.search);
+      const next = params.get("next");
+
+      const safeNext =
+        next && next.startsWith("/") && !next.startsWith("//")
+          ? next
+          : "/";
+
+      const redirectTo =
+        `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNext)}`;
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+        },
+      });
+
+      if (error) {
+        setErrorMessage(error.message);
+        setLoading(false);
+      }
+    } catch {
+      setErrorMessage("Gagal menghubungkan akun Google. Silakan coba kembali.");
+      setLoading(false);
+    }
+  }
+
+
   function openForgotPopup() {
     setRecoveryEmail(email);
     setRecoveryMethod(null);
@@ -219,14 +256,17 @@ export default function LoginPage() {
 
           {/* SOCIAL LOGIN - TEMPORARILY DISABLED */}
           <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              disabled
-              className="flex cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-900/50 px-3 py-3 text-sm font-semibold text-slate-500 opacity-70"
-            >
-              <span className="font-bold">G</span>
-              Google
-            </button>
+
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-3 py-3 text-sm font-semibold text-white transition hover:border-violet-500 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <span className="font-bold text-lg">G</span>
+            {loading ? "Menghubungkan..." : "Google"}
+          </button>
+
 
             <button
               type="button"
@@ -239,7 +279,7 @@ export default function LoginPage() {
           </div>
 
           <p className="mt-3 text-center text-[11px] text-slate-500">
-            Login Google dan Apple segera hadir.
+            Login dengan Google atau Apple ID.
           </p>
 
           {/* REGISTER */}
