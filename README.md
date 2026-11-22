@@ -301,9 +301,62 @@ flowchart TB
 
 ---
 
+
 ## System Workflows
 
-### 1. Order and Payment Flow
+This section describes the main application workflows, authentication processes, transaction lifecycle, and external service integrations within TOPUPKU.
+
+### 1. User Journey Flow
+
+```mermaid
+flowchart TD
+    A([User Visits TOPUPKU]) --> B["Homepage"]
+    B --> C["Browse Game Catalog"]
+    C --> D["Select Game and Product"]
+    D --> E["Checkout"]
+
+    E --> F{"Authenticated?"}
+    F -->|No| G["Login or Register"]
+    F -->|Yes| H["Enter Game Account Details"]
+
+    G --> I["Authentication Process"]
+    I --> H
+
+    H --> J["Validate Order"]
+    J --> K["Create Order"]
+    K --> L["Proceed to Payment"]
+    L --> M["View Order Status"]
+    M --> N["Order History"]
+```
+
+### 2. Authentication Flow
+
+TOPUPKU supports email-password authentication and Google OAuth through Supabase Auth.
+
+```mermaid
+flowchart TD
+    A([User Opens Authentication Page]) --> B{"Choose Authentication Method"}
+
+    B -->|Email and Password| C["Enter Credentials"]
+    C --> D["Supabase Sign In"]
+
+    B -->|Google OAuth| E["Click Login with Google"]
+    E --> F["Redirect to Google"]
+    F --> G["Select Google Account"]
+    G --> H["Google Authorization"]
+    H --> I["Supabase Auth Callback"]
+
+    D --> J{"Authentication Successful?"}
+    I --> J
+
+    J -->|No| K["Display Authentication Error"]
+    J -->|Yes| L["TOPUPKU Auth Callback"]
+    L --> M["Exchange Authorization Code"]
+    M --> N["Create Authenticated Session"]
+    N --> O["Redirect to Requested Page"]
+```
+
+### 3. Order and Payment Flow
 
 ```mermaid
 flowchart TD
@@ -311,64 +364,96 @@ flowchart TD
     B --> C["Enter Customer Information"]
     C --> D["Checkout"]
     D --> E["Server-side Validation"]
-    E --> F[("Save Order in Supabase")]
-    F --> G["Midtrans Snap"]
-    G --> H["Payment Simulation"]
-    H --> I["Payment Notification"]
-    I --> J["Webhook Signature Verification"]
-    J --> K["Validate Payment Status"]
-    K --> L[("Update Order Status")]
+    E --> F{"Order Valid?"}
+
+    F -->|No| G["Return Validation Error"]
+    F -->|Yes| H[("Save Order in Supabase")]
+
+    H --> I["Create Payment Request"]
+    I --> J["Midtrans Snap Sandbox"]
+    J --> K["User Completes Payment"]
+    K --> L["Payment Notification"]
+    L --> M["Webhook Signature Verification"]
+    M --> N["Validate Payment Status"]
+    N --> O[("Update Order Status")]
+    O --> P["Display Updated Order Status"]
 ```
 
 The backend validates order information and payment notifications before updating transaction status.
 
 The integration has been implemented at the code level, but complete external notification delivery has not been verified.
 
-### 2. Authentication Flow
+### 4. Password Recovery Flow
 
 ```mermaid
 flowchart TD
-    A["Register or Login"] --> B["Supabase Auth"]
-    B --> C["Authentication Callback"]
-    C --> D["Authenticated Session"]
-    D --> E["User Profile"]
-    D --> F["Order History"]
-    E --> G["Edit Profile"]
-```
-
-Supabase Auth manages user authentication and session handling.
-
-### 3. Password Recovery Flow
-
-```mermaid
-flowchart TD
-    A["Forgot Password"] --> B["Choose Recovery Method"]
-    B --> C["Email Recovery"]
-    C --> D["Supabase Password Reset"]
-    D --> E["Authentication Callback"]
-    E --> F["Reset Password Page"]
-    F --> G["Update Password"]
-    G --> H["Return to Login"]
+    A["Forgot Password"] --> B["Enter Registered Email"]
+    B --> C["Supabase Password Reset Request"]
+    C --> D["Send Recovery Email"]
+    D --> E["User Opens Recovery Link"]
+    E --> F["Authentication Callback"]
+    F --> G["Establish Recovery Session"]
+    G --> H["Reset Password Page"]
+    H --> I["Enter New Password"]
+    I --> J["Update Password"]
+    J --> K["Return to Login"]
 ```
 
 Email recovery has been implemented in the application interface. However, the complete recovery process remains pending successful verification.
 
 WhatsApp recovery is not available.
 
-### 4. Order Recovery Flow
+### 5. Order Recovery Flow
+
+This functionality allows users to recover order information using email OTP. It is separate from account authentication and password recovery.
 
 ```mermaid
 flowchart TD
     A["Order Recovery Request"] --> B["Recovery API"]
     B --> C["Generate OTP"]
     C --> D[("Store OTP")]
-    C --> E["Send Email with Resend"]
+    C --> E["Send Email Through Resend"]
     E --> F["User Enters OTP"]
     F --> G["Verify OTP"]
-    G --> H["Recover Order Information"]
+    G --> H{"OTP Valid?"}
+    H -->|No| I["Return Verification Error"]
+    H -->|Yes| J["Recover Order Information"]
 ```
 
-This is a separate functionality from account password recovery.
+### 6. User Profile Flow
+
+```mermaid
+flowchart TD
+    A["Authenticated User"] --> B["Open Profile Page"]
+    B --> C["Load User Profile"]
+    C --> D["Display Profile Information"]
+    D --> E["Edit Profile"]
+    E --> F["Submit Profile Changes"]
+    F --> G["Update Profile Data"]
+    G --> H["Refresh Profile Information"]
+```
+
+Profile editing is implemented. Custom profile image synchronization with the navigation bar may require further improvement.
+
+### 7. Order Management Flow
+
+```mermaid
+flowchart TD
+    A["Authenticated User"] --> B["Open Order History"]
+    B --> C["Load User Orders"]
+    C --> D["Select Order"]
+    D --> E["View Order Details"]
+    E --> F{"Delete Order?"}
+    F -->|No| G["Return to Order History"]
+    F -->|Yes| H["Display Confirmation Modal"]
+    H --> I{"Confirm Action?"}
+    I -->|No| G
+    I -->|Yes| J["Soft Delete Order"]
+    J --> K["Refresh Order History"]
+```
+
+Order deletion uses soft-delete functionality. It hides the order from the user's history and does not represent cancellation of the underlying payment transaction.
+
 
 ---
 
