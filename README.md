@@ -309,7 +309,7 @@ This section describes the main application workflows, authentication processes,
 ### 1. User Journey Flow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([User Visits TOPUPKU]) --> B["Homepage"]
     B --> C["Browse Game Catalog"]
     C --> D["Select Game and Product"]
@@ -334,7 +334,7 @@ flowchart TD
 TOPUPKU supports email-password authentication and Google OAuth through Supabase Auth.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A([User Opens Authentication Page]) --> B{"Choose Authentication Method"}
 
     B -->|Email and Password| C["Enter Credentials"]
@@ -359,7 +359,7 @@ flowchart TD
 ### 3. Order and Payment Flow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["Select Game"] --> B["Select Product"]
     B --> C["Enter Customer Information"]
     C --> D["Checkout"]
@@ -386,7 +386,7 @@ The integration has been implemented at the code level, but complete external no
 ### 4. Password Recovery Flow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["Forgot Password"] --> B["Enter Registered Email"]
     B --> C["Supabase Password Reset Request"]
     C --> D["Send Recovery Email"]
@@ -423,7 +423,7 @@ flowchart TD
 ### 6. User Profile Flow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["Authenticated User"] --> B["Open Profile Page"]
     B --> C["Load User Profile"]
     C --> D["Display Profile Information"]
@@ -438,7 +438,7 @@ Profile editing is implemented. Custom profile image synchronization with the na
 ### 7. Order Management Flow
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["Authenticated User"] --> B["Open Order History"]
     B --> C["Load User Orders"]
     C --> D["Select Order"]
