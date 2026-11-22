@@ -114,15 +114,17 @@ Commercial operations, supplier partnerships, automated fulfillment, and product
 
 ## Features
 
+
 ### Implemented
 
 - [x] Homepage and game catalog.
 - [x] Game and product selection.
 - [x] Product detail and checkout interface.
 - [x] Customer and game account information form.
-- [x] User registration and login.
-- [x] Supabase authentication.
-- [x] Authentication callback and session handling.
+- [x] User registration and email-password login.
+- [x] Supabase authentication and session handling.
+- [x] Google OAuth integration configuration and login implementation.
+- [x] Authentication callback and session exchange.
 - [x] User profile and profile editing.
 - [x] Order creation and order history.
 - [x] Server-side product and price validation.
@@ -141,6 +143,7 @@ Commercial operations, supplier partnerships, automated fulfillment, and product
 
 ### Implemented but Pending Verification
 
+- [ ] Google OAuth end-to-end login verification.
 - [ ] Complete password recovery through Supabase email.
 - [ ] Successful password update using a recovery session.
 - [ ] End-to-end payment notification delivery.
@@ -150,7 +153,6 @@ Commercial operations, supplier partnerships, automated fulfillment, and product
 ### Not Yet Available
 
 - [ ] WhatsApp password recovery.
-- [ ] Google authentication.
 - [ ] Apple ID authentication.
 - [ ] Automated game credit delivery.
 - [ ] Production payment processing.
