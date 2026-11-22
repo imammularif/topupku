@@ -213,33 +213,47 @@ Email-based password recovery uses Supabase Auth. Its complete end-to-end flow r
 
 ---
 
+
 ## System Architecture
 
-TOPUPKU uses Next.js as its application framework, combining frontend interfaces and backend API routes.
+TOPUPKU is built using a full-stack architecture based on Next.js, Supabase, and external service integrations.
 
-Supabase provides authentication and PostgreSQL database services, while Midtrans and Resend provide external payment and email integration capabilities.
+The application uses Next.js for frontend rendering and backend API processing. Supabase provides authentication, session management, and PostgreSQL database services.
+
+Google OAuth is integrated through Supabase Auth to support Google account authentication. Midtrans provides payment processing through its Sandbox environment, while Resend handles email delivery for order recovery OTP.
 
 ```mermaid
-flowchart LR
+flowchart TB
     U([User])
 
-    subgraph APP["Next.js Application"]
+    subgraph APP["TOPUPKU - Next.js Application"]
         FE["Frontend - React UI"]
+        AUTHCB["Authentication Callback"]
         API["Backend API Routes"]
+
+        FE --> AUTHCB
         FE --> API
     end
 
-    DB[("Supabase PostgreSQL")]
-    AUTH["Supabase Auth"]
+    subgraph SUPABASE["Supabase Platform"]
+        SA["Supabase Auth"]
+        DB[("Supabase PostgreSQL")]
+        STORAGE["Supabase Storage"]
+    end
+
+    GOOGLE["Google OAuth Provider"]
     MT["Midtrans Snap Sandbox"]
     RS["Resend Email Service"]
 
-    U --> FE
+    U <--> FE
+    FE <--> SA
+    SA <--> GOOGLE
+    AUTHCB <--> SA
     API <--> DB
-    FE <--> AUTH
     API <--> MT
-    API <--> RS
     MT -.->|"Payment Notification"| API
+    API <--> RS
+    FE <--> STORAGE
 ```
 
 ### Main Components
@@ -247,8 +261,10 @@ flowchart LR
 **Frontend**
 - Homepage and game catalog.
 - Authentication pages.
+- Email and password login.
+- Google OAuth login.
 - Checkout interface.
-- User profile.
+- User profile and profile editing.
 - Order history.
 - Password recovery interface.
 
@@ -258,12 +274,21 @@ flowchart LR
 - Order history management.
 - Payment notification handling.
 - Order recovery OTP processing.
+- Authentication callback handling.
 
 **Supabase**
 - PostgreSQL database.
 - User authentication.
+- OAuth provider integration.
 - Session management.
 - Application data storage.
+- Storage services for supported file uploads.
+
+**Google OAuth**
+- Google account authentication.
+- OAuth authorization and consent.
+- Secure authentication flow through Supabase Auth.
+- Redirect handling through the TOPUPKU authentication callback.
 
 **Midtrans**
 - Snap payment integration.
@@ -272,6 +297,7 @@ flowchart LR
 
 **Resend**
 - Email delivery for the existing order recovery OTP functionality.
+
 
 ---
 
