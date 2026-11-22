@@ -408,7 +408,7 @@ WhatsApp recovery is not available.
 This functionality allows users to recover order information using email OTP. It is separate from account authentication and password recovery.
 
 ```mermaid
-flowchart TD
+flowchart LR
     A["Order Recovery Request"] --> B["Recovery API"]
     B --> C["Generate OTP"]
     C --> D[("Store OTP")]
