@@ -113,37 +113,28 @@ function CheckoutContent() {
 
       <div className="relative mx-auto max-w-5xl">
 
-        {/* HEADER */}
-        <div className="mb-8">
-          <Link
-            href="/"
-            className="text-xl font-extrabold tracking-tight text-white"
-          >
-            TopUpKu<span className="text-violet-400">.</span>
-          </Link>
+      {/* HEADER */}
+      <div className="mb-8">
+        <Link
+          href="/"
+          className="text-sm text-slate-400 transition-colors hover:text-violet-400"
+        >
+          ← Kembali ke Beranda
+        </Link>
 
-          <div className="mt-8">
-            <Link
-              href="/"
-              className="text-sm text-slate-400 transition-colors hover:text-violet-400"
-            >
-              ← Kembali ke Beranda
-            </Link>
+        <p className="mt-6 text-sm font-semibold tracking-wide text-violet-400">
+          ORDER CHECKOUT
+        </p>
 
-            <p className="mt-6 text-sm font-semibold tracking-wide text-violet-400">
-              ORDER CHECKOUT
-            </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          Selesaikan Pesananmu
+        </h1>
 
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Selesaikan Pesananmu
-            </h1>
-
-            <p className="mt-3 text-sm leading-7 text-slate-400">
-              Periksa detail pesanan dan lengkapi informasi
-              pelanggan sebelum melanjutkan pembayaran.
-            </p>
-          </div>
-        </div>
+        <p className="mt-3 text-sm leading-7 text-slate-400">
+          Periksa detail pesanan dan lengkapi informasi
+          pelanggan sebelum melanjutkan pembayaran.
+        </p>
+      </div>
 
         {/* MAIN CONTENT */}
         <div className="grid gap-6 lg:grid-cols-[1fr_0.85fr]">
@@ -360,9 +351,14 @@ function CheckoutContent() {
                 disabled={isSubmitting}
                 className="mt-6 w-full rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 py-3.5 text-sm font-bold text-white transition-all hover:from-violet-500 hover:to-blue-500 hover:shadow-[0_0_20px_rgba(124,58,237,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting
-                  ? "Mengarahkan ke Pembayaran..."
-                  : "Buat Pesanan →"}
+                {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  Memproses Pesanan...
+                </span>
+              ) : (
+                "Buat Pesanan →"
+              )}
               </button>
 
               <Link

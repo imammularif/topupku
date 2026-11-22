@@ -4,12 +4,13 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 import { games, products, categories } from "../data/games";
-import Navbar from "../components/Navbar";
 import HeroSection from "../components/HeroSection";
 import GameSection from "../components/GameSection";
 import OrderModal from "../components/OrderModal";
+
 
 export default function Home() {
   const router = useRouter();
@@ -19,6 +20,10 @@ export default function Home() {
   const [userId, setUserId] = useState("");
   const [zoneId, setZoneId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
+
+  // LOGIN REQUIRED POPUP
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [pendingCheckoutUrl, setPendingCheckoutUrl] = useState("");
 
   // GAME SEARCH & FILTER STATE
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,8 +57,9 @@ export default function Home() {
     setSelectedProduct("");
   }
 
+
   // CHECKOUT
-  function handleCheckout() {
+  async function handleCheckout() {
     if (!userId.trim() || !zoneId.trim() || !selectedProduct) {
       alert("Lengkapi User ID, Zone ID, dan nominal top up!");
       return;
@@ -76,12 +82,25 @@ export default function Home() {
       price: String(product.price),
     });
 
-    router.push(`/checkout?${params.toString()}`);
+    const checkoutUrl = `/checkout?${params.toString()}`;
+
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setPendingCheckoutUrl(checkoutUrl);
+      setShowLoginPopup(true);
+      return;
+    }
+
+    router.push(checkoutUrl);
   }
+
 
   return (
     <main className="min-h-screen bg-[#080B18] text-slate-100">
-      <Navbar />
 
       <HeroSection />
 
@@ -329,6 +348,50 @@ export default function Home() {
         onClose={closeModal}
         onCheckout={handleCheckout}
       />
+
+
+      {/* LOGIN REQUIRED POPUP */}
+      {showLoginPopup && (
+        <div className="fixed inset-0 z-[120] flex min-h-screen items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-md">
+          <div className="w-full max-w-sm rounded-2xl border border-violet-500/20 bg-[#101426]/95 p-6 text-center shadow-2xl shadow-black/50">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500/10 text-2xl">
+              🔐
+            </div>
+
+            <h2 className="text-xl font-bold text-white">
+              Login Diperlukan
+            </h2>
+
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">
+              Anda harus login ke akun TOPUPKU terlebih dahulu sebelum melakukan pembelian.
+            </p>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowLoginPopup(false)}
+                className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-700"
+              >
+                Batal
+              </button>
+
+              <button
+                type="button"
+                onClick={() =>
+                  router.push(
+                    `/login?next=${encodeURIComponent(pendingCheckoutUrl)}`
+                  )
+                }
+                className="flex-1 rounded-lg bg-violet-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-violet-500"
+              >
+                Login Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
     </main>
   );
 }

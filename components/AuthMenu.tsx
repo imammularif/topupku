@@ -186,45 +186,46 @@ export default function AuthMenu() {
         </div>
       </div>
 
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
-          <div className="w-full max-w-sm animate-[fadeIn_0.2s_ease-out] rounded-2xl border border-slate-700 bg-[#101426] p-6 shadow-2xl shadow-black/50">
-            <div className="mb-5 text-center">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 text-2xl">
-                <span>↪</span>
-              </div>
-
-              <h2 className="text-xl font-bold text-white">
-                Yakin ingin logout?
-              </h2>
-
-              <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                Anda akan keluar dari akun TOPUPKU. Anda dapat login kembali kapan saja.
-              </p>
+     {showLogoutConfirm && (
+      <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-md">
+        <div className="w-full max-w-sm animate-[fadeIn_0.2s_ease-out] rounded-2xl border border-violet-500/20 bg-[#101426]/95 p-6 shadow-2xl shadow-black/50">
+          <div className="mb-5 text-center">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 text-2xl">
+              <span>⚠️</span>
             </div>
 
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={() => setShowLogoutConfirm(false)}
-                disabled={loggingOut}
-                className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
-              >
-                Batal
-              </button>
+            <h2 className="text-xl font-bold text-white">
+              Yakin ingin logout?
+            </h2>
 
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="flex-1 rounded-lg bg-red-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loggingOut ? "Memproses..." : "Ya, Logout"}
-              </button>
-            </div>
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">
+              Anda akan keluar dari akun TOPUPKU. Anda dapat login kembali kapan saja.
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => setShowLogoutConfirm(false)}
+              disabled={loggingOut}
+              className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+            >
+              Batal
+            </button>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="flex-1 rounded-lg bg-red-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loggingOut ? "Memproses..." : "Ya, Logout"}
+            </button>
           </div>
         </div>
-      )}
+      </div>
+    )}
+
     </>
   );
 }

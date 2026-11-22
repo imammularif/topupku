@@ -218,7 +218,12 @@ export default function EditProfilePage() {
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#080B18] text-slate-300">
-        Memuat profil...
+        <div className="text-center">
+          <div className="mx-auto h-9 w-9 animate-spin rounded-full border-2 border-slate-700 border-t-violet-500" />
+          <p className="mt-5 text-sm text-slate-400">
+            Memuat profil...
+          </p>
+        </div>
       </main>
     );
   }
@@ -386,7 +391,14 @@ export default function EditProfilePage() {
                 disabled={saving}
                 className="flex-1 rounded-lg bg-violet-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {saving ? "Menyimpan..." : "Simpan Perubahan"}
+                {saving ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Menyimpan...
+                  </span>
+                ) : (
+                  "Simpan Perubahan"
+                )}
               </button>
             </div>
           </form>

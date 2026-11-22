@@ -97,6 +97,7 @@ export default function OrdersPage() {
 >("all");
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [deletingOrder, setDeletingOrder] = useState<string | null>(null);
+  const [confirmHideOrder, setConfirmHideOrder] = useState<Order | null>(null);
   const [now, setNow] = useState(0);
 
   const loadOrders = useCallback(async () => {
@@ -173,14 +174,10 @@ const filteredOrders =
       ? unpaidOrders
       : orders;
 
-  async function handleHideOrder(order: Order) {
-    const confirmed = window.confirm(
-      `Sembunyikan pesanan ${order.order_code} dari riwayat akun kamu?\n\nData transaksi tetap tersimpan di sistem TOPUPKU. Tindakan ini tidak membatalkan pembayaran.`
-    );
+    async function handleHideOrder(order: Order) {
+      setDeletingOrder(order.order_code);
+      setError("");
 
-    if (!confirmed) return;
-
-    setDeletingOrder(order.order_code);
     setError("");
 
     try {
@@ -210,6 +207,8 @@ const filteredOrders =
       setOrders((current) =>
         current.filter((item) => item.order_code !== order.order_code)
       );
+
+      setConfirmHideOrder(null);
 
       if (selectedOrder?.order_code === order.order_code) {
         setSelectedOrder(null);
@@ -260,7 +259,14 @@ const filteredOrders =
               disabled={loading}
               className="rounded-xl border border-slate-700 bg-[#111827] px-4 py-2.5 text-sm font-semibold text-slate-300 transition hover:border-violet-500/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? "Memuat..." : "↻ Refresh"}
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-slate-500 border-t-violet-400" />
+                  Memuat...
+                </span>
+              ) : (
+                "Refresh"
+              )}
             </button>
           </div>
         </div>
@@ -494,13 +500,11 @@ const filteredOrders =
 
                         <button
                           type="button"
-                          onClick={() => handleHideOrder(order)}
+                          onClick={() => setConfirmHideOrder(order)}
                           disabled={deletingOrder === order.order_code}
-                          className="rounded-lg border border-slate-700 px-4 py-2.5 text-xs font-semibold text-red-400 transition hover:border-red-500/40 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="rounded-lg border border-red-500/30 px-4 py-2.5 text-xs font-semibold text-red-400 transition hover:border-red-500/60 hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          {deletingOrder === order.order_code
-                            ? "Memproses..."
-                            : "Sembunyikan"}
+                          Hapus
                         </button>
                       </div>
                     </div>
@@ -629,6 +633,63 @@ const filteredOrders =
           </div>
         </div>
       )}
+
+      {confirmHideOrder && (
+        <div className="fixed inset-0 z-[110] flex min-h-screen items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-md">
+          <div className="w-full max-w-sm animate-[fadeIn_0.2s_ease-out] rounded-2xl border border-red-500/20 bg-[#101426]/95 p-6 shadow-2xl shadow-black/50">
+            <div className="mb-5 text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-500/10 text-2xl">
+                ⚠️
+              </div>
+
+              <h2 className="text-xl font-bold text-white">
+                Hapus dari Riwayat?
+              </h2>
+
+              <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                Yakin ingin menghapus pesanan ini dari riwayat akun kamu?
+              </p>
+
+              <p className="mt-3 break-all rounded-lg bg-slate-800/70 p-3 text-xs font-semibold text-violet-300">
+                {confirmHideOrder.order_code}
+              </p>
+
+              <p className="mt-3 text-xs leading-relaxed text-slate-500">
+                Data transaksi tetap tersimpan di sistem TOPUPKU.
+                Tindakan ini tidak membatalkan pembayaran.
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setConfirmHideOrder(null)}
+                disabled={deletingOrder === confirmHideOrder.order_code}
+                className="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+              >
+                Batal
+              </button>
+
+              <button
+                type="button"
+                onClick={() => void handleHideOrder(confirmHideOrder)}
+                disabled={deletingOrder === confirmHideOrder.order_code}
+                className="flex-1 rounded-lg bg-red-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {deletingOrder === confirmHideOrder.order_code ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    Memproses...
+                  </span>
+                ) : (
+                  "Ya, Hapus"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }

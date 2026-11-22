@@ -35,14 +35,6 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/orders"
-            className="flex items-center gap-2 rounded-lg border border-violet-500/40 bg-violet-500/10 px-3 py-2.5 text-xs font-semibold text-violet-300 transition hover:border-violet-400 hover:bg-violet-500/20 sm:px-4 sm:text-sm"
-          >
-            <span>📦</span>
-            <span className="hidden sm:inline">Riwayat Pesanan</span>
-            <span className="sm:hidden">Pesanan</span>
-          </Link>
 
           <AuthMenu />
         </div>

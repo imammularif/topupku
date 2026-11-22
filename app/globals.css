@@ -72,6 +72,79 @@ body {
     0 0 16px rgba(59, 130, 246, 0.4);
 }
 
+
+/* ANIMATED NEON ORBIT */
+
+@keyframes neon-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.neon-orbit {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.neon-orbit::before {
+  content: "";
+  position: absolute;
+  inset: -150%;
+  z-index: -2;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 250deg,
+    #8b5cf6 285deg,
+    #38bdf8 315deg,
+    #a855f7 340deg,
+    transparent 360deg
+  );
+  animation: neon-orbit 4s linear infinite;
+}
+
+.neon-orbit::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  background: #101426;
+}
+
+
+/* ANIMATED TEXT GLOW */
+
+.neon-text {
+  background: linear-gradient(
+    90deg,
+    #a78bfa,
+    #38bdf8,
+    #c084fc,
+    #a78bfa
+  );
+  background-size: 300% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: neon-text-flow 5s linear infinite;
+}
+
+@keyframes neon-text-flow {
+  to {
+    background-position: 300% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-orbit::before,
+  .neon-text {
+    animation: none;
+  }
+}
+
+
 /* SCROLLBAR */
 
 ::-webkit-scrollbar {

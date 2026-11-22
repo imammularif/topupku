@@ -71,7 +71,12 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#080B18] text-slate-300">
-        Memuat profil...
+        <div className="text-center">
+          <div className="mx-auto h-9 w-9 animate-spin rounded-full border-2 border-slate-700 border-t-violet-500" />
+          <p className="mt-5 text-sm text-slate-400">
+            Memuat profil...
+          </p>
+        </div>
       </main>
     );
   }
